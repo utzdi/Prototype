@@ -9,6 +9,7 @@ import json
 from pathlib import Path
 
 from PIL import Image
+from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
 
@@ -64,6 +65,16 @@ class AnalysisResult:
 
 DEFAULT_MAX_DIMENSION = 1024
 DEFAULT_JPEG_QUALITY = 80
+
+
+class PresenceCheckResult(BaseModel):
+    """Pydantic schema for structured MLLM output. Used with LangChain's with_structured_output()."""
+    description_a: str
+    description_b: str
+    presence_a: bool
+    presence_b: bool
+    reasoning: str
+
 
 PRESENCE_CHECK_SCHEMA: dict = {
     "type": "object",

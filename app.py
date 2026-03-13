@@ -7,7 +7,7 @@ from config.settings import Settings
 from core.pair_loader import PairLoader, ScreenshotPair
 from core.prompt_builder import PromptBuilder, DEFAULT_TEMPLATE
 from core.result_manager import ResultManager, ExportConfig, generate_export_filename
-from providers import OpenAIProvider, AnthropicProvider, GoogleProvider, OllamaProvider, check_ollama_status, AnalysisResult, DEFAULT_MAX_DIMENSION, DEFAULT_JPEG_QUALITY
+from providers import OpenAIProvider, OPENAI_VISION_MODELS, AnthropicProvider, ANTHROPIC_VISION_MODELS, GoogleProvider, GOOGLE_VISION_MODELS, OllamaProvider, check_ollama_status, AnalysisResult, DEFAULT_MAX_DIMENSION, DEFAULT_JPEG_QUALITY
 
 st.set_page_config(
     page_title="MLLM Screenshot Vergleich",
@@ -50,6 +50,14 @@ def init_session_state():
         st.session_state.max_image_dimension = DEFAULT_MAX_DIMENSION
     if "jpeg_quality" not in st.session_state:
         st.session_state.jpeg_quality = DEFAULT_JPEG_QUALITY
+    if "openai_model" not in st.session_state:
+        st.session_state.openai_model = "gpt-5.2"
+    if "openai_detail" not in st.session_state:
+        st.session_state.openai_detail = "auto"
+    if "anthropic_model" not in st.session_state:
+        st.session_state.anthropic_model = "claude-sonnet-4-6"
+    if "google_model" not in st.session_state:
+        st.session_state.google_model = "gemini-2.5-pro"
 
 
 def render_sidebar():
@@ -84,6 +92,39 @@ def render_sidebar():
     if google_key != st.session_state.settings.google_api_key:
         st.session_state.settings.google_api_key = google_key
     
+    if st.session_state.settings.has_openai():
+        st.sidebar.subheader("OpenAI Einstellungen")
+        st.session_state.openai_model = st.sidebar.selectbox(
+            "OpenAI Modell",
+            options=OPENAI_VISION_MODELS,
+            index=OPENAI_VISION_MODELS.index(st.session_state.openai_model) if st.session_state.openai_model in OPENAI_VISION_MODELS else 0,
+            help="Vision-Modell für die Bildanalyse"
+        )
+        st.session_state.openai_detail = st.sidebar.selectbox(
+            "Bilddetail",
+            options=["auto", "low", "high"],
+            index=["auto", "low", "high"].index(st.session_state.openai_detail),
+            help="low=schneller/günstiger, high=bessere Qualität, auto=automatisch"
+        )
+
+    if st.session_state.settings.has_anthropic():
+        st.sidebar.subheader("Anthropic Einstellungen")
+        st.session_state.anthropic_model = st.sidebar.selectbox(
+            "Claude Modell",
+            options=ANTHROPIC_VISION_MODELS,
+            index=ANTHROPIC_VISION_MODELS.index(st.session_state.anthropic_model) if st.session_state.anthropic_model in ANTHROPIC_VISION_MODELS else 0,
+            help="claude-sonnet-4-6 = beste Balance, opus = leistungsstärker, haiku = schnellster"
+        )
+
+    if st.session_state.settings.has_google():
+        st.sidebar.subheader("Google Einstellungen")
+        st.session_state.google_model = st.sidebar.selectbox(
+            "Gemini Modell",
+            options=GOOGLE_VISION_MODELS,
+            index=GOOGLE_VISION_MODELS.index(st.session_state.google_model) if st.session_state.google_model in GOOGLE_VISION_MODELS else 0,
+            help="gemini-2.5-pro = stabil & leistungsstark, gemini-3.1-pro-preview = neuestes Modell (Preview)"
+        )
+
     st.sidebar.divider()
     
     st.sidebar.subheader("Screenshot-Ordner")
@@ -187,11 +228,11 @@ def render_sidebar():
     
     available = []
     if st.session_state.settings.has_openai():
-        available.append("GPT-4V")
+        available.append(f"OpenAI ({st.session_state.openai_model})")
     if st.session_state.settings.has_anthropic():
-        available.append("Claude Vision")
+        available.append(f"Anthropic ({st.session_state.anthropic_model})")
     if st.session_state.settings.has_google():
-        available.append("Gemini Pro")
+        available.append(f"Google ({st.session_state.google_model})")
     if st.session_state.ollama_enabled:
         available.append("LLaVA (Lokal)")
     if st.session_state.ollama_remote_enabled:
@@ -384,11 +425,11 @@ def render_analysis_tab():
         
         available_mllms = []
         if settings.has_openai():
-            available_mllms.append("GPT-4V")
+            available_mllms.append(f"OpenAI ({st.session_state.openai_model})")
         if settings.has_anthropic():
-            available_mllms.append("Claude Vision")
+            available_mllms.append(f"Anthropic ({st.session_state.anthropic_model})")
         if settings.has_google():
-            available_mllms.append("Gemini Pro")
+            available_mllms.append(f"Google ({st.session_state.google_model})")
         if st.session_state.ollama_enabled:
             available_mllms.append("LLaVA (Lokal)")
         if st.session_state.ollama_remote_enabled:
@@ -441,14 +482,34 @@ def run_analysis(pairs: list[ScreenshotPair], mllms: list[str], element: str):
     prompt = st.session_state.prompt_builder.build(element)
     
     providers = {}
-    if "GPT-4V" in mllms and settings.has_openai():
-        providers["GPT-4V"] = OpenAIProvider(settings.openai_api_key)
-    if "Claude Vision" in mllms and settings.has_anthropic():
-        providers["Claude Vision"] = AnthropicProvider(settings.anthropic_api_key)
-    if "Gemini Pro" in mllms and settings.has_google():
-        providers["Gemini Pro"] = GoogleProvider(settings.google_api_key)
     img_max = st.session_state.max_image_dimension if st.session_state.image_compression else 0
     img_quality = st.session_state.jpeg_quality if st.session_state.image_compression else 0
+    
+    openai_label = f"OpenAI ({st.session_state.openai_model})"
+    if openai_label in mllms and settings.has_openai():
+        providers[openai_label] = OpenAIProvider(
+            api_key=settings.openai_api_key,
+            model=st.session_state.openai_model,
+            max_image_dimension=img_max,
+            jpeg_quality=img_quality,
+            image_detail=st.session_state.openai_detail,
+        )
+    anthropic_label = f"Anthropic ({st.session_state.anthropic_model})"
+    if anthropic_label in mllms and settings.has_anthropic():
+        providers[anthropic_label] = AnthropicProvider(
+            api_key=settings.anthropic_api_key,
+            model=st.session_state.anthropic_model,
+            max_image_dimension=img_max,
+            jpeg_quality=img_quality,
+        )
+    google_label = f"Google ({st.session_state.google_model})"
+    if google_label in mllms and settings.has_google():
+        providers[google_label] = GoogleProvider(
+            api_key=settings.google_api_key,
+            model=st.session_state.google_model,
+            max_image_dimension=img_max,
+            jpeg_quality=img_quality,
+        )
     
     if "LLaVA (Lokal)" in mllms and st.session_state.ollama_enabled:
         providers["LLaVA (Lokal)"] = OllamaProvider(
