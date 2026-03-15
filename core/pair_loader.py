@@ -1,10 +1,12 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional
+import json
 import re
 
 
 SUPPORTED_FORMATS = {".png", ".jpg", ".jpeg", ".webp", ".gif"}
+META_FILENAME = "meta.json"
 
 
 @dataclass
@@ -13,10 +15,11 @@ class ScreenshotPair:
     reference_path: Path
     comparison_path: Path
     folder_path: Path
-    
+    element: Optional[str] = field(default=None)
+
     def is_valid(self) -> bool:
         return (
-            self.reference_path.exists() and 
+            self.reference_path.exists() and
             self.comparison_path.exists() and
             self.reference_path.suffix.lower() in SUPPORTED_FORMATS and
             self.comparison_path.suffix.lower() in SUPPORTED_FORMATS
@@ -78,14 +81,30 @@ class PairLoader:
                 comparison_path = file
         
         if reference_path and comparison_path:
+            element = self._read_element_from_meta(folder)
             return ScreenshotPair(
                 pair_id=folder.name,
                 reference_path=reference_path,
                 comparison_path=comparison_path,
-                folder_path=folder
+                folder_path=folder,
+                element=element,
             )
-        
+
         return None
+
+    @staticmethod
+    def _read_element_from_meta(folder: Path) -> Optional[str]:
+        """Read the element to check from meta.json if present."""
+        meta_file = folder / META_FILENAME
+        if not meta_file.exists():
+            return None
+        try:
+            with open(meta_file, encoding="utf-8") as f:
+                data = json.load(f)
+            value = data.get("element")
+            return str(value).strip() if value else None
+        except Exception:
+            return None
     
     def _matches_pattern(self, filename: str, pattern: str) -> bool:
         """Check if filename matches the pattern (contains or equals)."""

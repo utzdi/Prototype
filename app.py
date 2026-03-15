@@ -4,9 +4,10 @@ from datetime import datetime
 import time
 
 from config.settings import Settings
-from core.pair_loader import PairLoader, ScreenshotPair
+from core.pair_loader import PairLoader, ScreenshotPair, META_FILENAME
 from core.prompt_builder import PromptBuilder, DEFAULT_TEMPLATE
 from core.result_manager import ResultManager, ExportConfig, generate_export_filename
+from core.run_store import RunRecord, save_run, load_run, list_runs, delete_run, run_record_to_results
 from providers import OpenAIProvider, OPENAI_VISION_MODELS, AnthropicProvider, ANTHROPIC_VISION_MODELS, GoogleProvider, GOOGLE_VISION_MODELS, OllamaProvider, check_ollama_status, AnalysisResult, DEFAULT_MAX_DIMENSION, DEFAULT_JPEG_QUALITY
 
 st.set_page_config(
@@ -58,6 +59,10 @@ def init_session_state():
         st.session_state.anthropic_model = "claude-sonnet-4-6"
     if "google_model" not in st.session_state:
         st.session_state.google_model = "gemini-2.5-pro"
+    if "last_run_id" not in st.session_state:
+        st.session_state.last_run_id = None
+    if "loaded_run_id" not in st.session_state:
+        st.session_state.loaded_run_id = None
 
 
 def render_sidebar():
@@ -383,7 +388,11 @@ def render_screenshots_tab():
 def render_pair_preview(pair: ScreenshotPair):
     """Render a preview of a single screenshot pair."""
     with st.container(border=True):
-        st.subheader(pair.pair_id)
+        pair_el = getattr(pair, "element", None)
+        label = pair.pair_id
+        if pair_el:
+            label += f" — `{pair_el}`"
+        st.subheader(label)
         
         col1, col2 = st.columns(2)
         with col1:
@@ -418,10 +427,19 @@ def render_analysis_tab():
         st.subheader("Einstellungen")
         
         element = st.text_input(
-            "Zu prüfendes Element",
+            "Fallback-Element",
             value="Impressum",
-            help="Das Element, das in den Screenshots gesucht werden soll"
+            help="Wird verwendet, wenn ein Paar keine meta.json mit 'element' enthält"
         )
+
+        pairs_with_meta = [p for p in pairs if _read_meta_element(p)]
+        if pairs_with_meta:
+            st.info(
+                f"{len(pairs_with_meta)} von {len(pairs)} Paaren haben ein Element aus meta.json. "
+                "Paare ohne meta.json nutzen das Fallback-Element."
+            )
+        else:
+            st.caption("Kein Paar hat eine meta.json — alle nutzen das Fallback-Element.")
         
         available_mllms = []
         if settings.has_openai():
@@ -473,13 +491,31 @@ def render_analysis_tab():
         run_analysis(pairs_to_analyze, selected_mllms, element)
 
 
+def _read_meta_element(pair: ScreenshotPair) -> str | None:
+    """Read the element directly from the pair's meta.json at runtime.
+
+    This intentionally bypasses whatever value is stored in the (potentially
+    stale) ScreenshotPair object that lives in Streamlit's session state.
+    """
+    import json
+    meta_file = pair.folder_path / META_FILENAME
+    if not meta_file.exists():
+        return None
+    try:
+        with open(meta_file, encoding="utf-8") as f:
+            data = json.load(f)
+        value = data.get("element")
+        return str(value).strip() if value else None
+    except Exception:
+        return None
+
+
 def run_analysis(pairs: list[ScreenshotPair], mllms: list[str], element: str):
     """Run the analysis for all pairs and MLLMs."""
     st.session_state.analysis_running = True
     st.session_state.result_manager.clear()
     
     settings = st.session_state.settings
-    prompt = st.session_state.prompt_builder.build(element)
     
     providers = {}
     img_max = st.session_state.max_image_dimension if st.session_state.image_compression else 0
@@ -531,38 +567,62 @@ def run_analysis(pairs: list[ScreenshotPair], mllms: list[str], element: str):
         )
     
     st.session_state.debug_logs = []
-    
+
     total_calls = len(pairs) * len(providers)
     progress_bar = st.progress(0)
     status_text = st.empty()
     results_container = st.container()
-    
+
     current_call = 0
-    
+    elements_used: set[str] = set()
+
     for pair in pairs:
+        # Always re-read meta.json at runtime so stale session-state objects
+        # don't cause the cached (possibly None) element to override the file.
+        live_element = _read_meta_element(pair)
+        pair_element = live_element or element
+        elements_used.add(pair_element)
+        pair_prompt = st.session_state.prompt_builder.build(pair_element)
+
         for mllm_name, provider in providers.items():
             current_call += 1
-            status_text.text(f"Analysiere {pair.pair_id} mit {mllm_name}... ({current_call}/{total_calls})")
-            
+            status_text.text(
+                f"Analysiere {pair.pair_id} [{pair_element}] mit {mllm_name}... "
+                f"({current_call}/{total_calls})"
+            )
+
             result = provider.analyze(
                 image_a_path=pair.reference_path,
                 image_b_path=pair.comparison_path,
-                prompt=prompt,
+                prompt=pair_prompt,
                 pair_id=pair.pair_id,
-                element=element
+                element=pair_element,
             )
-            
+
             st.session_state.result_manager.add_result(result)
             if result.debug:
                 st.session_state.debug_logs.append(result)
-            
+
             progress_bar.progress(current_call / total_calls)
-            
+
             with results_container:
                 display_result_inline(result)
-    
+
     status_text.text("Analyse abgeschlossen!")
     st.session_state.analysis_running = False
+
+    elements_label = ", ".join(sorted(elements_used)) if elements_used else element
+    try:
+        run_record = save_run(
+            results=st.session_state.result_manager.get_results(),
+            element=elements_label,
+            mllms=list(providers.keys()),
+        )
+        st.session_state.last_run_id = run_record.run_id
+        st.toast(f"Run gespeichert: {run_record.name}")
+    except Exception as e:
+        st.warning(f"Run konnte nicht gespeichert werden: {e}")
+
     st.balloons()
 
 
@@ -580,11 +640,37 @@ def display_result_inline(result: AnalysisResult):
 def render_results_tab():
     """Render the results tab."""
     st.header("Ergebnisse")
-    
+
+    # --- Vergangene Runs ---
+    saved_runs = list_runs()
+    if saved_runs:
+        with st.expander(f"Vergangene Runs laden ({len(saved_runs)} gespeichert)", expanded=False):
+            for rec in saved_runs:
+                ts = rec.timestamp[:16].replace("T", " ")
+                col_info, col_load, col_del = st.columns([5, 1, 1])
+                col_info.markdown(
+                    f"**{rec.name}** &nbsp;&nbsp; `{ts}` &nbsp;&nbsp; "
+                    f"{rec.total_calls} Calls · "
+                    f"{rec.summary.get('matches', 0)} Matches · "
+                    f"{rec.summary.get('errors', 0)} Fehler"
+                )
+                if col_load.button("Laden", key=f"load_{rec.run_id}"):
+                    loaded = run_record_to_results(rec)
+                    st.session_state.result_manager.clear()
+                    for r in loaded:
+                        st.session_state.result_manager.add_result(r)
+                    st.session_state.loaded_run_id = rec.run_id
+                    st.toast(f"Run geladen: {rec.name}")
+                    st.rerun()
+                if col_del.button("Löschen", key=f"del_{rec.run_id}"):
+                    delete_run(rec.run_id)
+                    st.toast("Run gelöscht")
+                    st.rerun()
+
     results = st.session_state.result_manager.get_results()
-    
+
     if not results:
-        st.info("Noch keine Ergebnisse vorhanden. Führe zuerst eine Analyse durch.")
+        st.info("Noch keine Ergebnisse vorhanden. Führe zuerst eine Analyse durch oder lade einen vergangenen Run.")
         return
     
     summary = st.session_state.result_manager.get_summary()
@@ -637,7 +723,26 @@ def render_results_tab():
     
     filtered_df = filtered_df[filtered_df["match"].isin(match_values) | filtered_df["match"].isna()]
     
-    st.dataframe(filtered_df, use_container_width=True)
+    st.dataframe(
+        filtered_df,
+        use_container_width=True,
+        column_config={
+            "pair_id":        st.column_config.TextColumn("Paar"),
+            "mllm":           st.column_config.TextColumn("MLLM"),
+            "element":        st.column_config.TextColumn("Element"),
+            "presence_a":     st.column_config.CheckboxColumn("Vorhanden (Ref.)"),
+            "presence_b":     st.column_config.CheckboxColumn("Vorhanden (Vgl.)"),
+            "match":          st.column_config.CheckboxColumn("Übereinstimmung"),
+            "description_a":  st.column_config.TextColumn("Beschreibung (Ref.)"),
+            "description_b":  st.column_config.TextColumn("Beschreibung (Vgl.)"),
+            "reasoning":      st.column_config.TextColumn("Begründung"),
+            "tokens_used":    st.column_config.NumberColumn("Tokens"),
+            "latency_ms":     st.column_config.NumberColumn("Latenz (ms)"),
+            "raw_response":   st.column_config.TextColumn("Rohantwort"),
+            "timestamp":      st.column_config.DatetimeColumn("Zeitstempel"),
+            "error":          st.column_config.TextColumn("Fehler"),
+        },
+    )
     
     st.divider()
     
@@ -660,6 +765,117 @@ def render_results_tab():
                 file_name=filename,
                 mime="text/csv"
             )
+
+
+def render_monitoring_tab():
+    """Render the monitoring/comparison tab for comparing multiple runs."""
+    import pandas as pd
+
+    st.header("Monitoring & Run-Vergleich")
+
+    saved_runs = list_runs()
+    if not saved_runs:
+        st.info("Noch keine gespeicherten Runs vorhanden. Führe zuerst eine Analyse durch.")
+        return
+
+    run_labels = {f"{rec.name} ({rec.timestamp[:16].replace('T', ' ')})": rec for rec in saved_runs}
+    selected_labels = st.multiselect(
+        "Runs auswählen",
+        options=list(run_labels.keys()),
+        default=list(run_labels.keys())[:min(3, len(run_labels))],
+        help="Wähle einen oder mehrere Runs zum Vergleich aus"
+    )
+
+    if not selected_labels:
+        st.info("Bitte mindestens einen Run auswählen.")
+        return
+
+    selected_records = [run_labels[lbl] for lbl in selected_labels]
+
+    # Build comparison rows: one row per run × MLLM
+    rows = []
+    for rec in selected_records:
+        run_label = f"{rec.element} · {rec.timestamp[:10]}"
+        for mllm, stats in rec.summary.get("by_mllm", {}).items():
+            total = stats.get("total", 0)
+            errors = stats.get("errors", 0)
+            matches = stats.get("matches", 0)
+            valid = total - errors
+            match_rate = round(matches / valid * 100, 1) if valid > 0 else None
+            avg_lat = stats.get("avg_latency_ms")
+            avg_tok = stats.get("avg_tokens")
+            total_tok = stats.get("total_tokens")
+            tok_per_sec = stats.get("avg_tokens_per_sec")
+            rows.append({
+                "Run": run_label,
+                "Run-ID": rec.run_id,
+                "MLLM": mllm,
+                "Element": rec.element,
+                "Paare": rec.pair_count,
+                "Calls": total,
+                "Matches": matches,
+                "Fehler": errors,
+                "Match-Rate (%)": match_rate,
+                "Ø Latenz (ms)": round(avg_lat, 0) if avg_lat is not None else None,
+                "Ø Tokens": round(avg_tok, 0) if avg_tok is not None else None,
+                "Tokens gesamt": total_tok,
+                "Tokens/Sek": round(tok_per_sec, 1) if tok_per_sec is not None else None,
+            })
+
+    if not rows:
+        st.warning("Keine auswertbaren Daten in den gewählten Runs.")
+        return
+
+    df = pd.DataFrame(rows)
+
+    st.subheader("Vergleichstabelle")
+    display_cols = ["Run", "MLLM", "Element", "Paare", "Calls", "Matches", "Fehler",
+                    "Match-Rate (%)", "Ø Latenz (ms)", "Ø Tokens", "Tokens gesamt", "Tokens/Sek"]
+    st.dataframe(df[display_cols], use_container_width=True)
+
+    st.divider()
+    st.subheader("Charts")
+
+    chart_metric = st.selectbox(
+        "Metrik für Balkendiagramm",
+        options=["Match-Rate (%)", "Ø Latenz (ms)", "Ø Tokens", "Tokens gesamt", "Tokens/Sek"],
+        index=0,
+    )
+
+    chart_df = df[["Run", "MLLM", chart_metric]].dropna(subset=[chart_metric])
+    if chart_df.empty:
+        st.info(f"Keine Daten für '{chart_metric}' verfügbar.")
+    else:
+        pivot = chart_df.pivot_table(index="MLLM", columns="Run", values=chart_metric)
+        st.bar_chart(pivot)
+
+    st.divider()
+    st.subheader("Alle Metriken im Überblick")
+
+    col1, col2 = st.columns(2)
+    metrics = [
+        ("Match-Rate (%)", col1),
+        ("Ø Latenz (ms)", col2),
+        ("Ø Tokens", col1),
+        ("Tokens gesamt", col2),
+        ("Tokens/Sek", col1),
+    ]
+    for metric, col in metrics:
+        sub_df = df[["Run", "MLLM", metric]].dropna(subset=[metric])
+        if not sub_df.empty:
+            with col:
+                st.markdown(f"**{metric}**")
+                pivot = sub_df.pivot_table(index="MLLM", columns="Run", values=metric)
+                st.bar_chart(pivot, height=250)
+
+    st.divider()
+    csv_data = df[display_cols].to_csv(index=False)
+    st.download_button(
+        label="Vergleich als CSV herunterladen",
+        data=csv_data,
+        file_name=f"monitoring_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+        mime="text/csv",
+    )
 
 
 def render_debug_tab():
@@ -750,26 +966,29 @@ def main():
     
     render_sidebar()
     
-    tabs = ["Konfiguration", "Screenshots", "Analyse", "Ergebnisse"]
+    tabs = ["Konfiguration", "Screenshots", "Analyse", "Ergebnisse", "Monitoring"]
     if st.session_state.debug_mode:
         tabs.append("Debug")
-    
+
     tab_objects = st.tabs(tabs)
-    
+
     with tab_objects[0]:
         render_config_tab()
-    
+
     with tab_objects[1]:
         render_screenshots_tab()
-    
+
     with tab_objects[2]:
         render_analysis_tab()
-    
+
     with tab_objects[3]:
         render_results_tab()
-    
-    if st.session_state.debug_mode and len(tab_objects) > 4:
-        with tab_objects[4]:
+
+    with tab_objects[4]:
+        render_monitoring_tab()
+
+    if st.session_state.debug_mode and len(tab_objects) > 5:
+        with tab_objects[5]:
             render_debug_tab()
 
 

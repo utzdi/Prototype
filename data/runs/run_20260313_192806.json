@@ -1,0 +1,106 @@
+{
+  "run_id": "run_20260313_192806",
+  "name": "Impressum · 2 MLLMs · 2 Paare",
+  "timestamp": "2026-03-13T19:28:06.310954",
+  "element": "Impressum",
+  "mllms": [
+    "Google (gemini-3.1-pro-preview)",
+    "qwen3-vl:32b (Remote)"
+  ],
+  "pair_count": 2,
+  "total_calls": 4,
+  "summary": {
+    "total": 4,
+    "matches": 2,
+    "mismatches": 2,
+    "errors": 0,
+    "by_mllm": {
+      "gemini-3.1-pro-preview": {
+        "total": 2,
+        "matches": 1,
+        "mismatches": 1,
+        "errors": 0,
+        "avg_latency_ms": 8865.2,
+        "avg_tokens": 3002.5,
+        "total_tokens": 6005,
+        "avg_tokens_per_sec": 390.8
+      },
+      "qwen3-vl:32b (Remote)": {
+        "total": 2,
+        "matches": 1,
+        "mismatches": 1,
+        "errors": 0,
+        "avg_latency_ms": 26878.1,
+        "avg_tokens": 4740.0,
+        "total_tokens": 9480,
+        "avg_tokens_per_sec": 178.3
+      }
+    }
+  },
+  "results": [
+    {
+      "pair_id": "paar_001",
+      "mllm": "gemini-3.1-pro-preview",
+      "element": "Impressum",
+      "description_a": "Screenshot A zeigt den unteren Bereich einer Webseite im Dark Mode mit drei Info-Karten zu den Themen Design, Entwicklung und Strategie sowie einem einfachen Copyright-Footer.",
+      "description_b": "Screenshot B zeigt den oberen Bereich einer Webseite im Light Mode mit einem Header, der großen Überschrift 'Ideen, die bewegen.' und den ersten zwei Info-Karten.",
+      "presence_a": false,
+      "presence_b": true,
+      "match": false,
+      "reasoning": "In Screenshot A ist das Element 'Impressum' nicht vorhanden, da im sichtbaren Bereich (Inhaltskarten und Footer) kein entsprechender Text oder Link zu sehen ist. In Screenshot B ist das Element 'Impressum' vorhanden, da es sich deutlich sichtbar als Button oben rechts in der Kopfzeile befindet und zudem im Einleitungstext erwähnt wird.",
+      "tokens_used": 3427,
+      "latency_ms": 12690.80901145935,
+      "raw_response": "[{'type': 'text', 'text': '{\\n  \"description_a\": \"Screenshot A zeigt den unteren Bereich einer Webseite im Dark Mode mit drei Info-Karten zu den Themen Design, Entwicklung und Strategie sowie einem einfachen Copyright-Footer.\",\\n  \"description_b\": \"Screenshot B zeigt den oberen Bereich einer Webseite im Light Mode mit einem Header, der großen Überschrift \\'Ideen, die bewegen.\\' und den ersten zwei Info-Karten.\",\\n  \"presence_a\": false,\\n  \"presence_b\": true,\\n  \"reasoning\": \"In Screenshot A ist das Element \\'Impressum\\' nicht vorhanden, da im sichtbaren Bereich (Inhaltskarten und Footer) kein entsprechender Text oder Link zu sehen ist. In Screenshot B ist das Element \\'Impressum\\' vorhanden, da es sich deutlich sichtbar als Button oben rechts in der Kopfzeile befindet und zudem im Einleitungstext erwähnt wird.\"\\n}', 'extras': {'signature': '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'}}]",
+      "timestamp": "2026-03-13T19:27:07.509815",
+      "error": null
+    },
+    {
+      "pair_id": "paar_001",
+      "mllm": "qwen3-vl:32b (Remote)",
+      "element": "Impressum",
+      "description_a": "Screenshot A zeigt eine dunkle Webseite mit drei Abschnitten (Design, Entwicklung, Strategie) und einem Copyright-Hinweis am unteren Rand.",
+      "description_b": "Screenshot B zeigt eine helle Webseite mit einem Willkommensbereich, drei Abschnitten (Design, Entwicklung) und einer Navigationsleiste mit einem 'IMPRESSUM'-Button oben rechts.",
+      "presence_a": false,
+      "presence_b": true,
+      "match": false,
+      "reasoning": "In Screenshot A ist das Element 'Impressum' nicht sichtbar, da nur ein Copyright-Hinweis am unteren Rand vorhanden ist. In Screenshot B ist 'IMPRESSUM' als Button in der Navigationsleiste oben rechts deutlich erkennbar.",
+      "tokens_used": 4850,
+      "latency_ms": 24356.800079345703,
+      "raw_response": "\n{\n\n  \"description_a\": \"Screenshot A zeigt eine dunkle Webseite mit drei Abschnitten (Design, Entwicklung, Strategie) und einem Copyright-Hinweis am unteren Rand.\",\n  \"description_b\": \"Screenshot B zeigt eine helle Webseite mit einem Willkommensbereich, drei Abschnitten (Design, Entwicklung) und einer Navigationsleiste mit einem 'IMPRESSUM'-Button oben rechts.\",\n  \"presence_a\": false,\n  \"presence_b\": true,\n  \"reasoning\": \"In Screenshot A ist das Element 'Impressum' nicht sichtbar, da nur ein Copyright-Hinweis am unteren Rand vorhanden ist. In Screenshot B ist 'IMPRESSUM' als Button in der Navigationsleiste oben rechts deutlich erkennbar.\"\n}",
+      "timestamp": "2026-03-13T19:27:31.867657",
+      "error": null
+    },
+    {
+      "pair_id": "paar_002",
+      "mllm": "gemini-3.1-pro-preview",
+      "element": "Impressum",
+      "description_a": "Screenshot A zeigt eine Webseite im Terminal-Look mit dunklem Hintergrund und grüner Schrift. Es gibt eine Navigation oben rechts, einen großen Titel 'SYS OPERATION' und darunter Systemstatus-Balken sowie Log-Einträge.",
+      "description_b": "Screenshot B zeigt eine Webseite in einem hellen, minimalistischen Design mit schwarzer und roter Schrift. Oben rechts befindet sich eine Navigation, darunter ein großer Titel 'FORM FOLGT FUNKTION.' und drei Spalten mit den Themen Design, Entwicklung und Strategie.",
+      "presence_a": true,
+      "presence_b": true,
+      "match": true,
+      "reasoning": "In Screenshot A ist das Element 'Impressum' in der Navigation oben rechts als './IMPRESSUM.SH' vorhanden. In Screenshot B ist das Element 'Impressum' ebenfalls in der Navigation oben rechts als Button mit der Aufschrift 'IMPRESSUM' vorhanden.",
+      "tokens_used": 2578,
+      "latency_ms": 5039.525747299194,
+      "raw_response": "[{'type': 'text', 'text': '{\\n  \"description_a\": \"Screenshot A zeigt eine Webseite im Terminal-Look mit dunklem Hintergrund und grüner Schrift. Es gibt eine Navigation oben rechts, einen großen Titel \\'SYS OPERATION\\' und darunter Systemstatus-Balken sowie Log-Einträge.\",\\n  \"description_b\": \"Screenshot B zeigt eine Webseite in einem hellen, minimalistischen Design mit schwarzer und roter Schrift. Oben rechts befindet sich eine Navigation, darunter ein großer Titel \\'FORM FOLGT FUNKTION.\\' und drei Spalten mit den Themen Design, Entwicklung und Strategie.\",\\n  \"presence_a\": true,\\n  \"presence_b\": true,\\n  \"reasoning\": \"In Screenshot A ist das Element \\'Impressum\\' in der Navigation oben rechts als \\'./IMPRESSUM.SH\\' vorhanden. In Screenshot B ist das Element \\'Impressum\\' ebenfalls in der Navigation oben rechts als Button mit der Aufschrift \\'IMPRESSUM\\' vorhanden.\"\\n}', 'extras': {'signature': 'EjQKMgG+Pvb7YvJHBYQuvn1aVtCWKuiltPGqJ0p50NhDW45GJjLmJoUIVDQK0MUjE+ChY31V'}}]",
+      "timestamp": "2026-03-13T19:27:36.908159",
+      "error": null
+    },
+    {
+      "pair_id": "paar_002",
+      "mllm": "qwen3-vl:32b (Remote)",
+      "element": "Impressum",
+      "description_a": "Dark-themed webpage with a terminal-like interface showing system status metrics and a top navigation bar containing a button labeled './IMPRESSUM.SH'.",
+      "description_b": "Light-themed webpage with a clean layout, featuring a main heading 'FORM FOLGT FUNKTION.' and a top navigation bar including a clearly visible 'IMPRESSUM' button.",
+      "presence_a": true,
+      "presence_b": true,
+      "match": true,
+      "reasoning": "In Screenshot A, the element 'Impressum' is present as part of the button label './IMPRESSUM.SH' in the top navigation. In Screenshot B, the 'IMPRESSUM' button is explicitly visible in the top navigation bar.",
+      "tokens_used": 4630,
+      "latency_ms": 29399.434089660645,
+      "raw_response": "\n{\n\n  \"description_a\": \"Dark-themed webpage with a terminal-like interface showing system status metrics and a top navigation bar containing a button labeled './IMPRESSUM.SH'.\",\n  \"description_b\": \"Light-themed webpage with a clean layout, featuring a main heading 'FORM FOLGT FUNKTION.' and a top navigation bar including a clearly visible 'IMPRESSUM' button.\",\n  \"presence_a\": true,\n  \"presence_b\": true,\n  \"reasoning\": \"In Screenshot A, the element 'Impressum' is present as part of the button label './IMPRESSUM.SH' in the top navigation. In Screenshot B, the 'IMPRESSUM' button is explicitly visible in the top navigation bar.\"\n}",
+      "timestamp": "2026-03-13T19:28:06.309234",
+      "error": null
+    }
+  ]
+}
