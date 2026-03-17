@@ -38,6 +38,7 @@ def _result_to_dict(result: AnalysisResult) -> dict:
         "raw_response": result.raw_response,
         "timestamp": result.timestamp.isoformat() if result.timestamp else None,
         "error": result.error,
+        "ground_truth": result.ground_truth,
     }
 
 
@@ -56,6 +57,7 @@ def _dict_to_result(d: dict) -> AnalysisResult:
         latency_ms=d.get("latency_ms"),
         raw_response=d.get("raw_response"),
         error=d.get("error"),
+        ground_truth=d.get("ground_truth"),
     )
     if ts:
         try:
@@ -80,6 +82,9 @@ def _compute_summary(results: list[AnalysisResult]) -> dict:
                 "errors": 0,
                 "latencies": [],
                 "tokens": [],
+                "correct": 0,
+                "incorrect": 0,
+                "evaluated": 0,
             }
         entry = by_mllm[r.mllm]
         entry["total"] += 1
@@ -99,6 +104,14 @@ def _compute_summary(results: list[AnalysisResult]) -> dict:
         if r.tokens_used is not None and not r.error:
             entry["tokens"].append(r.tokens_used)
 
+        c = r.correct
+        if c is not None:
+            entry["evaluated"] += 1
+            if c:
+                entry["correct"] += 1
+            else:
+                entry["incorrect"] += 1
+
     # Compute aggregates per MLLM
     for mllm, entry in by_mllm.items():
         lats = entry.pop("latencies")
@@ -116,6 +129,9 @@ def _compute_summary(results: list[AnalysisResult]) -> dict:
             if tok_per_sec_values
             else None
         )
+
+        ev = entry["evaluated"]
+        entry["accuracy"] = round(entry["correct"] / ev, 4) if ev > 0 else None
 
     return {
         "total": len(results),

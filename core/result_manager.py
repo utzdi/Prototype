@@ -19,7 +19,11 @@ class ExportConfig:
     include_timestamp: bool = True
     
     def get_columns(self) -> list[str]:
-        columns = ["pair_id", "mllm", "element", "presence_a", "presence_b", "match"]
+        columns = [
+            "pair_id", "mllm", "element",
+            "presence_a", "presence_b", "match",
+            "ground_truth", "model_classification", "correct",
+        ]
         if self.include_descriptions:
             columns.extend(["description_a", "description_b"])
         if self.include_reasoning:
@@ -94,13 +98,16 @@ class ResultManager:
         matches = 0
         mismatches = 0
         errors = 0
-        
+
         for result in self.results:
             if result.mllm not in by_mllm:
-                by_mllm[result.mllm] = {"total": 0, "matches": 0, "errors": 0}
-            
+                by_mllm[result.mllm] = {
+                    "total": 0, "matches": 0, "errors": 0,
+                    "correct": 0, "incorrect": 0, "evaluated": 0,
+                }
+
             by_mllm[result.mllm]["total"] += 1
-            
+
             if result.error:
                 errors += 1
                 by_mllm[result.mllm]["errors"] += 1
@@ -109,7 +116,19 @@ class ResultManager:
                 by_mllm[result.mllm]["matches"] += 1
             elif result.match is False:
                 mismatches += 1
-        
+
+            c = result.correct
+            if c is not None:
+                by_mllm[result.mllm]["evaluated"] += 1
+                if c:
+                    by_mllm[result.mllm]["correct"] += 1
+                else:
+                    by_mllm[result.mllm]["incorrect"] += 1
+
+        for stats in by_mllm.values():
+            ev = stats["evaluated"]
+            stats["accuracy"] = round(stats["correct"] / ev, 4) if ev > 0 else None
+
         return {
             "total": len(self.results),
             "by_mllm": by_mllm,

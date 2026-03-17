@@ -48,16 +48,41 @@ class AnalysisResult:
     timestamp: datetime = field(default_factory=datetime.now)
     error: Optional[str] = None
     debug: Optional[DebugInfo] = field(default=None, repr=False)
-    
+    ground_truth: Optional[str] = field(default=None)
+
     def __post_init__(self):
         if self.presence_a is not None and self.presence_b is not None:
             self.match = self.presence_a == self.presence_b
-    
+
+    @property
+    def model_classification(self) -> Optional[str]:
+        """Derive the 4-class label from presence_a / presence_b."""
+        if self.presence_a is None or self.presence_b is None:
+            return None
+        if self.presence_a and self.presence_b:
+            return "both"
+        if self.presence_a and not self.presence_b:
+            return "only_a"
+        if not self.presence_a and self.presence_b:
+            return "only_b"
+        return "neither"
+
+    @property
+    def correct(self) -> Optional[bool]:
+        """True if model_classification matches ground_truth, None if either is unknown."""
+        if self.ground_truth is None or self.model_classification is None:
+            return None
+        return self.model_classification == self.ground_truth
+
     def to_dict(self, columns: list[str]) -> dict:
         result = {}
         for col in columns:
             if col == "timestamp":
                 result[col] = self.timestamp.isoformat()
+            elif col == "model_classification":
+                result[col] = self.model_classification
+            elif col == "correct":
+                result[col] = self.correct
             elif hasattr(self, col):
                 result[col] = getattr(self, col)
         return result

@@ -1,0 +1,88 @@
+@startuml
+title Repository Architecture - UML Component Diagram
+
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam packageStyle rectangle
+left to right direction
+
+actor User
+
+package "Local Application" {
+  component "Streamlit UI" as UI
+  component "App Controller\n(app.py)" as APP
+  component "Analysis Orchestrator\n(run_analysis)" as ORCH
+}
+
+package "Configuration" {
+  component "Settings\n(config/settings.py)" as SETTINGS
+}
+
+package "Core Services" {
+  component "Pair Loader\n(core/pair_loader.py)" as PAIR
+  component "Prompt Builder\n(core/prompt_builder.py)" as PROMPT
+  component "Result Manager\n(core/result_manager.py)" as RESULTS
+  component "Run Store\n(core/run_store.py)" as RUNSTORE
+}
+
+package "Provider Layer" {
+  interface "MLLM Provider\n(BaseMLLMProvider)" as PROVIDER_IF
+  component "OpenAI Provider" as OPENAI_P
+  component "Anthropic Provider" as ANTHROPIC_P
+  component "Google Provider" as GOOGLE_P
+  component "Ollama Provider" as OLLAMA_P
+}
+
+package "File System" {
+  database "Screenshot Repository\n(data/screenshots)" as SCREENSHOTS
+  database "Run Repository\n(data/runs)" as RUNS
+  file ".env" as ENV
+}
+
+package "External Systems" {
+  cloud "OpenAI API" as OPENAI_API
+  cloud "Anthropic API" as ANTHROPIC_API
+  cloud "Google GenAI API" as GOOGLE_API
+  cloud "Ollama\n(local/remote)" as OLLAMA_API
+}
+
+User --> UI
+UI --> APP
+
+APP --> SETTINGS : load config
+SETTINGS --> ENV : reads
+
+APP --> PAIR : scan screenshot pairs
+PAIR --> SCREENSHOTS : reads images + meta.json
+
+APP --> PROMPT : build prompts
+APP --> ORCH : start analysis
+
+ORCH --> PROVIDER_IF : analyze(pair, prompt)
+OPENAI_P ..|> PROVIDER_IF
+ANTHROPIC_P ..|> PROVIDER_IF
+GOOGLE_P ..|> PROVIDER_IF
+OLLAMA_P ..|> PROVIDER_IF
+
+OPENAI_P --> OPENAI_API
+ANTHROPIC_P --> ANTHROPIC_API
+GOOGLE_P --> GOOGLE_API
+OLLAMA_P --> OLLAMA_API
+
+ORCH --> RESULTS : collect AnalysisResult
+ORCH --> RUNSTORE : persist run
+RUNSTORE --> RUNS : save/load JSON runs
+APP --> RUNSTORE : monitoring/history
+APP --> RESULTS : tables/export
+
+note bottom of APP
+  app.py combines presentation,
+  session state, and workflow control.
+end note
+
+note bottom of RUNSTORE
+  Persistence is file-based.
+  No separate database or HTTP backend exists.
+end note
+
+@enduml

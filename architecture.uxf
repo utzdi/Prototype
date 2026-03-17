@@ -1,0 +1,38 @@
+<diagram program="umletino" version="15.1"><zoom_level>8</zoom_level><help_text>it=)-
+</help_text><element><id>UMLGeneric</id><coordinates><x>144</x><y>288</y><w>176</w><h>64</h></coordinates><panel_attributes>symbol=component
+&lt;&lt;component&gt;&gt;
+Orchestrator (Logic)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLGeneric</id><coordinates><x>144</x><y>456</y><w>176</w><h>64</h></coordinates><panel_attributes>symbol=component
+&lt;&lt;component&gt;&gt;
+WebUI (Control and Monitor)</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>280</x><y>344</y><w>120</w><h>80</h></coordinates><panel_attributes>lt=()-
+
+&lt;&lt;interface&gt;&gt;
+provides the answers 
+a structured way
+</panel_attributes><additional_attributes>12;74;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>272</x><y>400</y><w>40</w><h>72</h></coordinates><panel_attributes>lt=)-</panel_attributes><additional_attributes>22;20;20;70</additional_attributes></element><element><id>Relation</id><coordinates><x>160</x><y>392</y><w>88</w><h>88</h></coordinates><panel_attributes>lt=()-
+
+&lt;&lt;interface&gt;&gt;
+configuration
+
+
+</panel_attributes><additional_attributes>12;14;10;80</additional_attributes></element><element><id>Relation</id><coordinates><x>152</x><y>344</y><w>40</w><h>72</h></coordinates><panel_attributes>lt=)-</panel_attributes><additional_attributes>22;60;20;10</additional_attributes></element><element><id>UMLGeneric</id><coordinates><x>144</x><y>120</y><w>176</w><h>64</h></coordinates><panel_attributes>symbol=component
+&lt;&lt;component&gt;&gt;
+FileSystem</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>216</x><y>176</y><w>200</w><h>80</h></coordinates><panel_attributes>lt=()-
+
+&lt;&lt;interface&gt;&gt;
+provides the screenshots and metadata
+
+</panel_attributes><additional_attributes>12;74;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>208</x><y>232</y><w>40</w><h>72</h></coordinates><panel_attributes>lt=)-</panel_attributes><additional_attributes>22;20;20;70</additional_attributes></element><element><id>UMLGeneric</id><coordinates><x>448</x><y>288</y><w>160</w><h>64</h></coordinates><panel_attributes>symbol=component
+&lt;&lt;abstraction&gt;&gt;
+Abstraction Layer</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>312</x><y>288</y><w>152</w><h>32</h></coordinates><panel_attributes>lt=&lt;-
+submit Prompts &amp; Images</panel_attributes><additional_attributes>170;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>600</x><y>312</y><w>88</w><h>24</h></coordinates><panel_attributes>lt=()-</panel_attributes><additional_attributes>90;10;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>672</x><y>304</y><w>40</w><h>40</h></coordinates><panel_attributes>lt=)-</panel_attributes><additional_attributes>22;20;30;20</additional_attributes></element><element><id>Relation</id><coordinates><x>696</x><y>240</y><w>160</w><h>88</h></coordinates><panel_attributes>lt=&lt;-&gt;
+</panel_attributes><additional_attributes>180;10;10;90</additional_attributes></element><element><id>Relation</id><coordinates><x>696</x><y>304</y><w>160</w><h>32</h></coordinates><panel_attributes>lt=&lt;-&gt;
+Request / Response</panel_attributes><additional_attributes>180;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>696</x><y>320</y><w>160</w><h>88</h></coordinates><panel_attributes>lt=&lt;-&gt;
+</panel_attributes><additional_attributes>180;90;10;10</additional_attributes></element><element><id>UMLGeneric</id><coordinates><x>840</x><y>224</y><w>160</w><h>48</h></coordinates><panel_attributes>symbol=component
+&lt;&lt;component&gt;&gt;
+Model 1</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLGeneric</id><coordinates><x>840</x><y>296</y><w>160</w><h>48</h></coordinates><panel_attributes>symbol=component
+&lt;&lt;component&gt;&gt;
+Model 2</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLGeneric</id><coordinates><x>840</x><y>368</y><w>160</w><h>48</h></coordinates><panel_attributes>symbol=component
+&lt;&lt;component&gt;&gt;
+Model 3</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLActor</id><coordinates><x>424</x><y>456</y><w>48</w><h>88</h></coordinates><panel_attributes>Actor</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>312</x><y>472</y><w>128</w><h>32</h></coordinates><panel_attributes>lt=&lt;-
+&lt;&lt;uses&gt;&gt;</panel_attributes><additional_attributes>10;20;140;20</additional_attributes></element><element><id>Relation</id><coordinates><x>312</x><y>320</y><w>152</w><h>32</h></coordinates><panel_attributes>lt=&lt;-
+provides model Answers</panel_attributes><additional_attributes>10;20;170;20</additional_attributes></element></diagram>

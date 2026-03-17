@@ -1,12 +1,15 @@
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Optional
+from typing import Literal, Optional
 import json
 import re
 
 
 SUPPORTED_FORMATS = {".png", ".jpg", ".jpeg", ".webp", ".gif"}
 META_FILENAME = "meta.json"
+
+GroundTruth = Literal["both", "only_a", "only_b", "neither"]
+VALID_GROUND_TRUTH_VALUES: set[str] = {"both", "only_a", "only_b", "neither"}
 
 
 @dataclass
@@ -16,6 +19,7 @@ class ScreenshotPair:
     comparison_path: Path
     folder_path: Path
     element: Optional[str] = field(default=None)
+    ground_truth: Optional[GroundTruth] = field(default=None)
 
     def is_valid(self) -> bool:
         return (
@@ -81,30 +85,37 @@ class PairLoader:
                 comparison_path = file
         
         if reference_path and comparison_path:
-            element = self._read_element_from_meta(folder)
+            element, ground_truth = self._read_meta(folder)
             return ScreenshotPair(
                 pair_id=folder.name,
                 reference_path=reference_path,
                 comparison_path=comparison_path,
                 folder_path=folder,
                 element=element,
+                ground_truth=ground_truth,
             )
 
         return None
 
     @staticmethod
-    def _read_element_from_meta(folder: Path) -> Optional[str]:
-        """Read the element to check from meta.json if present."""
+    def _read_meta(folder: Path) -> tuple[Optional[str], Optional[GroundTruth]]:
+        """Read element and ground_truth from meta.json if present."""
         meta_file = folder / META_FILENAME
         if not meta_file.exists():
-            return None
+            return None, None
         try:
             with open(meta_file, encoding="utf-8") as f:
                 data = json.load(f)
-            value = data.get("element")
-            return str(value).strip() if value else None
+            element_raw = data.get("element")
+            element = str(element_raw).strip() if element_raw else None
+
+            gt_raw = data.get("ground_truth")
+            ground_truth: Optional[GroundTruth] = (
+                gt_raw if gt_raw in VALID_GROUND_TRUTH_VALUES else None
+            )
+            return element, ground_truth
         except Exception:
-            return None
+            return None, None
     
     def _matches_pattern(self, filename: str, pattern: str) -> bool:
         """Check if filename matches the pattern (contains or equals)."""

@@ -496,8 +496,10 @@ def _read_meta_element(pair: ScreenshotPair) -> str | None:
 
     This intentionally bypasses whatever value is stored in the (potentially
     stale) ScreenshotPair object that lives in Streamlit's session state.
+    Also refreshes pair.ground_truth in place so it stays consistent.
     """
     import json
+    from core.pair_loader import VALID_GROUND_TRUTH_VALUES
     meta_file = pair.folder_path / META_FILENAME
     if not meta_file.exists():
         return None
@@ -505,6 +507,8 @@ def _read_meta_element(pair: ScreenshotPair) -> str | None:
         with open(meta_file, encoding="utf-8") as f:
             data = json.load(f)
         value = data.get("element")
+        gt_raw = data.get("ground_truth")
+        pair.ground_truth = gt_raw if gt_raw in VALID_GROUND_TRUTH_VALUES else None
         return str(value).strip() if value else None
     except Exception:
         return None
@@ -598,6 +602,7 @@ def run_analysis(pairs: list[ScreenshotPair], mllms: list[str], element: str):
                 pair_id=pair.pair_id,
                 element=pair_element,
             )
+            result.ground_truth = pair.ground_truth
 
             st.session_state.result_manager.add_result(result)
             if result.debug:
@@ -685,11 +690,18 @@ def render_results_tab():
     
     st.subheader("Nach MLLM")
     for mllm, stats in summary["by_mllm"].items():
+        accuracy = stats.get("accuracy")
+        accuracy_label = f"{accuracy * 100:.1f} %" if accuracy is not None else "–"
+        evaluated = stats.get("evaluated", 0)
         with st.expander(f"{mllm} ({stats['total']} Ergebnisse)"):
-            cols = st.columns(3)
+            cols = st.columns(4)
             cols[0].metric("Total", stats["total"])
             cols[1].metric("Matches", stats["matches"])
             cols[2].metric("Fehler", stats["errors"])
+            cols[3].metric(
+                f"Accuracy ({evaluated} bewertet)",
+                accuracy_label,
+            )
     
     st.divider()
     
@@ -727,20 +739,23 @@ def render_results_tab():
         filtered_df,
         use_container_width=True,
         column_config={
-            "pair_id":        st.column_config.TextColumn("Paar"),
-            "mllm":           st.column_config.TextColumn("MLLM"),
-            "element":        st.column_config.TextColumn("Element"),
-            "presence_a":     st.column_config.CheckboxColumn("Vorhanden (Ref.)"),
-            "presence_b":     st.column_config.CheckboxColumn("Vorhanden (Vgl.)"),
-            "match":          st.column_config.CheckboxColumn("Übereinstimmung"),
-            "description_a":  st.column_config.TextColumn("Beschreibung (Ref.)"),
-            "description_b":  st.column_config.TextColumn("Beschreibung (Vgl.)"),
-            "reasoning":      st.column_config.TextColumn("Begründung"),
-            "tokens_used":    st.column_config.NumberColumn("Tokens"),
-            "latency_ms":     st.column_config.NumberColumn("Latenz (ms)"),
-            "raw_response":   st.column_config.TextColumn("Rohantwort"),
-            "timestamp":      st.column_config.DatetimeColumn("Zeitstempel"),
-            "error":          st.column_config.TextColumn("Fehler"),
+            "pair_id":              st.column_config.TextColumn("Paar"),
+            "mllm":                 st.column_config.TextColumn("MLLM"),
+            "element":              st.column_config.TextColumn("Element"),
+            "presence_a":           st.column_config.CheckboxColumn("Vorhanden (Ref.)"),
+            "presence_b":           st.column_config.CheckboxColumn("Vorhanden (Vgl.)"),
+            "match":                st.column_config.CheckboxColumn("Übereinstimmung"),
+            "ground_truth":         st.column_config.TextColumn("Ground Truth"),
+            "model_classification": st.column_config.TextColumn("Modell-Klassifikation"),
+            "correct":              st.column_config.CheckboxColumn("Korrekt"),
+            "description_a":        st.column_config.TextColumn("Beschreibung (Ref.)"),
+            "description_b":        st.column_config.TextColumn("Beschreibung (Vgl.)"),
+            "reasoning":            st.column_config.TextColumn("Begründung"),
+            "tokens_used":          st.column_config.NumberColumn("Tokens"),
+            "latency_ms":           st.column_config.NumberColumn("Latenz (ms)"),
+            "raw_response":         st.column_config.TextColumn("Rohantwort"),
+            "timestamp":            st.column_config.DatetimeColumn("Zeitstempel"),
+            "error":                st.column_config.TextColumn("Fehler"),
         },
     )
     

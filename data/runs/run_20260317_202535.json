@@ -1,0 +1,101 @@
+{
+  "run_id": "run_20260317_202535",
+  "name": "Impressum · 3 MLLMs · 1 Paare",
+  "timestamp": "2026-03-17T20:25:35.220985",
+  "element": "Impressum",
+  "mllms": [
+    "OpenAI (gpt-5.2)",
+    "Anthropic (claude-sonnet-4-6)",
+    "Google (gemini-2.5-flash)"
+  ],
+  "pair_count": 1,
+  "total_calls": 3,
+  "summary": {
+    "total": 3,
+    "matches": 3,
+    "mismatches": 0,
+    "errors": 0,
+    "by_mllm": {
+      "gpt-5.2": {
+        "total": 1,
+        "matches": 1,
+        "mismatches": 0,
+        "errors": 0,
+        "avg_latency_ms": 4458.0,
+        "avg_tokens": 2325.0,
+        "total_tokens": 2325,
+        "avg_tokens_per_sec": 521.5
+      },
+      "claude-sonnet-4-6": {
+        "total": 1,
+        "matches": 1,
+        "mismatches": 0,
+        "errors": 0,
+        "avg_latency_ms": 8270.2,
+        "avg_tokens": 3388.0,
+        "total_tokens": 3388,
+        "avg_tokens_per_sec": 409.7
+      },
+      "gemini-2.5-flash": {
+        "total": 1,
+        "matches": 1,
+        "mismatches": 0,
+        "errors": 0,
+        "avg_latency_ms": 7387.2,
+        "avg_tokens": 1968.0,
+        "total_tokens": 1968,
+        "avg_tokens_per_sec": 266.4
+      }
+    }
+  },
+  "results": [
+    {
+      "pair_id": "paar_006",
+      "mllm": "gpt-5.2",
+      "element": "Impressum",
+      "description_a": "Screenshot A zeigt eine dichte Terminal-/Log-Ansicht mit vielen System- und Servermeldungen sowie deutschsprachigen Rechtstext-/Pflichtangaben im unteren Bereich.",
+      "description_b": "Screenshot B zeigt ebenfalls eine Terminal-/Log-Ansicht mit denselben Zeilen aus Systemmeldungen und deutschsprachigen Pflichtangaben.",
+      "presence_a": true,
+      "presence_b": true,
+      "match": true,
+      "reasoning": "In Screenshot A ist im mittleren/unteren Textblock die Zeichenfolge „Impressum | § 5“ klar lesbar. In Screenshot B ist dieselbe Textzeile ebenfalls sichtbar („Impressum | § 5“), daher kommt das Wort in beiden Screenshots vor.",
+      "tokens_used": 2325,
+      "latency_ms": 4458.030223846436,
+      "raw_response": "{\"description_a\":\"Screenshot A zeigt eine dichte Terminal-/Log-Ansicht mit vielen System- und Servermeldungen sowie deutschsprachigen Rechtstext-/Pflichtangaben im unteren Bereich.\",\"description_b\":\"Screenshot B zeigt ebenfalls eine Terminal-/Log-Ansicht mit denselben Zeilen aus Systemmeldungen und deutschsprachigen Pflichtangaben.\",\"presence_a\":true,\"presence_b\":true,\"reasoning\":\"In Screenshot A ist im mittleren/unteren Textblock die Zeichenfolge „Impressum | § 5“ klar lesbar. In Screenshot B ist dieselbe Textzeile ebenfalls sichtbar („Impressum | § 5“), daher kommt das Wort in beiden Screenshots vor.\"}",
+      "timestamp": "2026-03-17T20:25:19.559393",
+      "error": null
+    },
+    {
+      "pair_id": "paar_006",
+      "mllm": "claude-sonnet-4-6",
+      "element": "Impressum",
+      "description_a": "Screenshot A zeigt einen dichten, technischen Textblock mit gemischten Systeminformationen, Server-Logs, Netzwerkdaten, rechtlichen Angaben (z. B. Impressum, Datenschutzerklärung) und Konfigurationsparametern auf schwarzem Hintergrund.",
+      "description_b": "Screenshot B ist nahezu identisch mit Screenshot A – derselbe dichte Textblock mit Systeminformationen, Server-Logs, Netzwerkdaten und rechtlichen Angaben auf schwarzem Hintergrund, ohne erkennbare Unterschiede.",
+      "presence_a": true,
+      "presence_b": true,
+      "match": true,
+      "reasoning": "In Screenshot A ist das Wort \"Impressum\" klar sichtbar im Fließtext vorhanden, eingebettet in den Abschnitt \"Anbieterkennzeichnung · Pflichtangaben · Impressum | § 5 TMG\". In Screenshot B ist derselbe Text identisch vorhanden, da beide Screenshots augenscheinlich denselben Inhalt zeigen – das Wort \"Impressum\" erscheint an derselben Stelle im Text.",
+      "tokens_used": 3388,
+      "latency_ms": 8270.218849182129,
+      "raw_response": "[{'id': 'toolu_01L78XJ1FnuRxTfnsDSj2mch', 'caller': {'type': 'direct'}, 'input': {'description_a': 'Screenshot A zeigt einen dichten, technischen Textblock mit gemischten Systeminformationen, Server-Logs, Netzwerkdaten, rechtlichen Angaben (z. B. Impressum, Datenschutzerklärung) und Konfigurationsparametern auf schwarzem Hintergrund.', 'description_b': 'Screenshot B ist nahezu identisch mit Screenshot A – derselbe dichte Textblock mit Systeminformationen, Server-Logs, Netzwerkdaten und rechtlichen Angaben auf schwarzem Hintergrund, ohne erkennbare Unterschiede.', 'presence_a': True, 'presence_b': True, 'reasoning': 'In Screenshot A ist das Wort \"Impressum\" klar sichtbar im Fließtext vorhanden, eingebettet in den Abschnitt \"Anbieterkennzeichnung · Pflichtangaben · Impressum | § 5 TMG\". In Screenshot B ist derselbe Text identisch vorhanden, da beide Screenshots augenscheinlich denselben Inhalt zeigen – das Wort \"Impressum\" erscheint an derselben Stelle im Text.'}, 'name': 'PresenceCheckResult', 'type': 'tool_use'}]",
+      "timestamp": "2026-03-17T20:25:27.830695",
+      "error": null
+    },
+    {
+      "pair_id": "paar_006",
+      "mllm": "gemini-2.5-flash",
+      "element": "Impressum",
+      "description_a": "Screenshot A zeigt eine lange Liste von technischen Informationen, die wie Systemprotokolle oder Diagnoseausgaben aussehen, mit Netzwerkparametern, Fehlermeldungen und einigen deutschen rechtlichen Informationen am unteren Rand.",
+      "description_b": "Screenshot B zeigt eine lange Liste von technischen Informationen, die wie Systemprotokolle oder Diagnoseausgaben aussehen, mit Netzwerkparametern, Fehlermeldungen und einigen deutschen rechtlichen Informationen am unteren Rand.",
+      "presence_a": false,
+      "presence_b": false,
+      "match": true,
+      "reasoning": "Das Wort \"Impressum\" ist in keinem der beiden Screenshots explizit im sichtbaren Text vorhanden. Obwohl Abschnitte mit rechtlichen und Kontaktinformationen, die typischerweise in einem Impressum zu finden sind, vorhanden sind, fehlt der spezifische Begriff \"Impressum\" selbst.",
+      "tokens_used": 1968,
+      "latency_ms": 7387.245893478394,
+      "raw_response": "{\n  \"description_a\": \"Screenshot A zeigt eine lange Liste von technischen Informationen, die wie Systemprotokolle oder Diagnoseausgaben aussehen, mit Netzwerkparametern, Fehlermeldungen und einigen deutschen rechtlichen Informationen am unteren Rand.\",\n  \"description_b\": \"Screenshot B zeigt eine lange Liste von technischen Informationen, die wie Systemprotokolle oder Diagnoseausgaben aussehen, mit Netzwerkparametern, Fehlermeldungen und einigen deutschen rechtlichen Informationen am unteren Rand.\",\n  \"presence_a\": false,\n  \"presence_b\": false,\n  \"reasoning\": \"Das Wort \\\"Impressum\\\" ist in keinem der beiden Screenshots explizit im sichtbaren Text vorhanden. Obwohl Abschnitte mit rechtlichen und Kontaktinformationen, die typischerweise in einem Impressum zu finden sind, vorhanden sind, fehlt der spezifische Begriff \\\"Impressum\\\" selbst.\"\n}",
+      "timestamp": "2026-03-17T20:25:35.219763",
+      "error": null
+    }
+  ]
+}
