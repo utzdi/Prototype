@@ -1,0 +1,86 @@
+{
+  "run_id": "run_20260318_174938",
+  "name": "Eisbär, Impressum, Lokalpatriotismus · 1 MLLM · 3 Paare",
+  "timestamp": "2026-03-18T17:49:38.341436",
+  "element": "Eisbär, Impressum, Lokalpatriotismus",
+  "mllms": [
+    "qwen3-vl:32b (Remote)"
+  ],
+  "pair_count": 3,
+  "total_calls": 3,
+  "summary": {
+    "total": 3,
+    "matches": 2,
+    "mismatches": 0,
+    "errors": 1,
+    "by_mllm": {
+      "qwen3-vl:32b (Remote)": {
+        "total": 3,
+        "matches": 2,
+        "mismatches": 0,
+        "errors": 1,
+        "correct": 2,
+        "incorrect": 0,
+        "evaluated": 2,
+        "avg_latency_ms": 56918.6,
+        "avg_tokens": 3465.5,
+        "total_tokens": 6931,
+        "avg_tokens_per_sec": 91.7,
+        "accuracy": 1.0
+      }
+    }
+  },
+  "results": [
+    {
+      "pair_id": "paar_006",
+      "mllm": "qwen3-vl:32b (Remote)",
+      "element": "Impressum",
+      "description_a": "Screenshot A zeigt eine Webseite mit technischen Details, Systeminformationen und rechtlichen Hinweisen wie Datenschutzerklärung und Impressum in der Fußzeile.",
+      "description_b": "Screenshot B zeigt eine identische Webseite wie Screenshot A mit technischen Details, Systeminformationen und rechtlichen Hinweisen, einschließlich des Impressum-Links in der Fußzeile.",
+      "presence_a": true,
+      "presence_b": true,
+      "match": true,
+      "reasoning": "In beiden Screenshoten ist das Wort 'Impressum' in der Fußzeile sichtbar (z. B. 'Anbieterbezeichnung · Pflichtangaben · Impressum · § 5'), was die Präsenz des Elements bestätigt.",
+      "tokens_used": 3592,
+      "latency_ms": 90616.54710769653,
+      "raw_response": "\n{\n\n  \"description_a\": \"Screenshot A zeigt eine Webseite mit technischen Details, Systeminformationen und rechtlichen Hinweisen wie Datenschutzerklärung und Impressum in der Fußzeile.\",\n  \"description_b\": \"Screenshot B zeigt eine identische Webseite wie Screenshot A mit technischen Details, Systeminformationen und rechtlichen Hinweisen, einschließlich des Impressum-Links in der Fußzeile.\",\n  \"presence_a\": true,\n  \"presence_b\": true,\n  \"reasoning\": \"In beiden Screenshoten ist das Wort 'Impressum' in der Fußzeile sichtbar (z. B. 'Anbieterbezeichnung · Pflichtangaben · Impressum · § 5'), was die Präsenz des Elements bestätigt.\"\n}",
+      "timestamp": "2026-03-18T17:49:15.014467",
+      "error": null,
+      "ground_truth": "both"
+    },
+    {
+      "pair_id": "paar_007",
+      "mllm": "qwen3-vl:32b (Remote)",
+      "element": "Eisbär",
+      "description_a": "Screenshot A zeigt einen dichten Textblock mit technischen Systeminformationen, Server-Logs und Kontaktangaben, darunter IP-Adressen, DNS-Einstellungen, Fehlermeldungen und eine Datenschutzerklärung.",
+      "description_b": "Screenshot B zeigt denselben dichten Textblock wie Screenshot A mit identischen technischen Systeminformationen, Server-Logs und Kontaktangaben.",
+      "presence_a": true,
+      "presence_b": true,
+      "match": true,
+      "reasoning": "In beiden Screenshoten ist das Element 'Eisbär' in der Kontaktangabe 'Eisbär Fax: +49 89 123456-99' sichtbar, was die Anwesenheit bestätigt.",
+      "tokens_used": 3339,
+      "latency_ms": 23220.594882965088,
+      "raw_response": "\n{ \"description_a\": \"Screenshot A zeigt einen dichten Textblock mit technischen Systeminformationen, Server-Logs und Kontaktangaben, darunter IP-Adressen, DNS-Einstellungen, Fehlermeldungen und eine Datenschutzerklärung.\", \"description_b\": \"Screenshot B zeigt denselben dichten Textblock wie Screenshot A mit identischen technischen Systeminformationen, Server-Logs und Kontaktangaben.\", \"presence_a\": true, \"presence_b\": true, \"reasoning\": \"In beiden Screenshoten ist das Element 'Eisbär' in der Kontaktangabe 'Eisbär Fax: +49 89 123456-99' sichtbar, was die Anwesenheit bestätigt.\" }",
+      "timestamp": "2026-03-18T17:49:38.236117",
+      "error": null,
+      "ground_truth": "both"
+    },
+    {
+      "pair_id": "paar_008",
+      "mllm": "qwen3-vl:32b (Remote)",
+      "element": "Lokalpatriotismus",
+      "description_a": null,
+      "description_b": null,
+      "presence_a": null,
+      "presence_b": null,
+      "match": null,
+      "reasoning": null,
+      "tokens_used": null,
+      "latency_ms": 101.21488571166992,
+      "raw_response": null,
+      "timestamp": "2026-03-18T17:49:38.340736",
+      "error": "<html>\r\n<head><title>413 Request Entity Too Large</title></head>\r\n<body>\r\n<center><h1>413 Request Entity Too Large</h1></center>\r\n<hr><center>nginx</center>\r\n</body>\r\n</html>",
+      "ground_truth": "both"
+    }
+  ]
+}

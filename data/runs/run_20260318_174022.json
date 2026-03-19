@@ -1,0 +1,69 @@
+{
+  "run_id": "run_20260318_174022",
+  "name": "Eisbär, Lokalpatriotismus · 1 MLLM · 2 Paare",
+  "timestamp": "2026-03-18T17:40:22.457947",
+  "element": "Eisbär, Lokalpatriotismus",
+  "mllms": [
+    "qwen3-vl:32b (Remote)"
+  ],
+  "pair_count": 2,
+  "total_calls": 2,
+  "summary": {
+    "total": 2,
+    "matches": 2,
+    "mismatches": 0,
+    "errors": 0,
+    "by_mllm": {
+      "qwen3-vl:32b (Remote)": {
+        "total": 2,
+        "matches": 2,
+        "mismatches": 0,
+        "errors": 0,
+        "correct": 1,
+        "incorrect": 1,
+        "evaluated": 2,
+        "avg_latency_ms": 49286.0,
+        "avg_tokens": 3170.5,
+        "total_tokens": 6341,
+        "avg_tokens_per_sec": 64.4,
+        "accuracy": 0.5
+      }
+    }
+  },
+  "results": [
+    {
+      "pair_id": "paar_007",
+      "mllm": "qwen3-vl:32b (Remote)",
+      "element": "Eisbär",
+      "description_a": "Screenshot A zeigt eine textbasierte Webseite mit detaillierten Systemlogs, technischen Metriken und rechtlichen Informationen in deutscher und englischer Sprache.",
+      "description_b": "Screenshot B zeigt eine textbasierte Webseite, die identisch zu Screenshot A ist, mit detaillierten Systemlogs, technischen Metriken und rechtlichen Informationen.",
+      "presence_a": false,
+      "presence_b": false,
+      "match": true,
+      "reasoning": "In beiden Screenshoten ist das Wort 'Eisbär' nicht in den sichtbaren Textinhalten enthalten. Die Texte bestehen aus Systeminformationen, Log-Einträgen und rechtlichen Hinweisen, wobei 'Eisbär' nicht vorkommt.",
+      "tokens_used": 2597,
+      "latency_ms": 40099.02095794678,
+      "raw_response": "\n{ \"description_a\": \"Screenshot A zeigt eine textbasierte Webseite mit detaillierten Systemlogs, technischen Metriken und rechtlichen Informationen in deutscher und englischer Sprache.\", \"description_b\": \"Screenshot B zeigt eine textbasierte Webseite, die identisch zu Screenshot A ist, mit detaillierten Systemlogs, technischen Metriken und rechtlichen Informationen.\", \"presence_a\": false, \"presence_b\": false, \"reasoning\": \"In beiden Screenshoten ist das Wort 'Eisbär' nicht in den sichtbaren Textinhalten enthalten. Die Texte bestehen aus Systeminformationen, Log-Einträgen und rechtlichen Hinweisen, wobei 'Eisbär' nicht vorkommt.\" }",
+      "timestamp": "2026-03-18T17:39:23.976079",
+      "error": null,
+      "ground_truth": "both"
+    },
+    {
+      "pair_id": "paar_008",
+      "mllm": "qwen3-vl:32b (Remote)",
+      "element": "Lokalpatriotismus",
+      "description_a": "Screenshot A zeigt eine technische Systemausgabe mit Server-Logs, Systemmetriken und rechtlichen Informationen in deutscher Sprache, darunter die Erwähnung von 'Lokalpatriotismus' im Kontext offener Ports.",
+      "description_b": "Screenshot B zeigt eine identische technische Systemausgabe wie Screenshot A, mit denselben Server-Logs, Systemmetriken und rechtlichen Informationen, einschließlich der Erwähnung von 'Lokalpatriotismus'.",
+      "presence_a": true,
+      "presence_b": true,
+      "match": true,
+      "reasoning": "In beiden Screenshoten ist das Wort 'Lokalpatriotismus' in der Zeile 'Lokalpatriotismus offene Ports: 22, 80, 443, 3306, 5432...' sichtbar, weshalb es in A und B vorhanden ist.",
+      "tokens_used": 3744,
+      "latency_ms": 58473.061084747314,
+      "raw_response": "\n{\n\n  \"description_a\": \"Screenshot A zeigt eine technische Systemausgabe mit Server-Logs, Systemmetriken und rechtlichen Informationen in deutscher Sprache, darunter die Erwähnung von 'Lokalpatriotismus' im Kontext offener Ports.\",\n  \"description_b\": \"Screenshot B zeigt eine identische technische Systemausgabe wie Screenshot A, mit denselben Server-Logs, Systemmetriken und rechtlichen Informationen, einschließlich der Erwähnung von 'Lokalpatriotismus'.\",\n  \"presence_a\": true,\n  \"presence_b\": true,\n  \"reasoning\": \"In beiden Screenshoten ist das Wort 'Lokalpatriotismus' in der Zeile 'Lokalpatriotismus offene Ports: 22, 80, 443, 3306, 5432...' sichtbar, weshalb es in A und B vorhanden ist.\"\n}",
+      "timestamp": "2026-03-18T17:40:22.453895",
+      "error": null,
+      "ground_truth": "both"
+    }
+  ]
+}
