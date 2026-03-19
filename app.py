@@ -814,9 +814,10 @@ def render_monitoring_tab():
         for mllm, stats in rec.summary.get("by_mllm", {}).items():
             total = stats.get("total", 0)
             errors = stats.get("errors", 0)
-            matches = stats.get("matches", 0)
-            valid = total - errors
-            match_rate = round(matches / valid * 100, 1) if valid > 0 else None
+            evaluated = stats.get("evaluated", 0)
+            correct = stats.get("correct", 0)
+            accuracy_raw = stats.get("accuracy")
+            accuracy_pct = round(accuracy_raw * 100, 1) if accuracy_raw is not None else None
             avg_lat = stats.get("avg_latency_ms")
             avg_tok = stats.get("avg_tokens")
             total_tok = stats.get("total_tokens")
@@ -828,9 +829,10 @@ def render_monitoring_tab():
                 "Element": rec.element,
                 "Paare": rec.pair_count,
                 "Calls": total,
-                "Matches": matches,
+                "Korrekt": correct if evaluated > 0 else None,
+                "Bewertet": evaluated if evaluated > 0 else None,
                 "Fehler": errors,
-                "Match-Rate (%)": match_rate,
+                "Accuracy (%)": accuracy_pct,
                 "Ø Latenz (ms)": round(avg_lat, 0) if avg_lat is not None else None,
                 "Ø Tokens": round(avg_tok, 0) if avg_tok is not None else None,
                 "Tokens gesamt": total_tok,
@@ -844,8 +846,8 @@ def render_monitoring_tab():
     df = pd.DataFrame(rows)
 
     st.subheader("Vergleichstabelle")
-    display_cols = ["Run", "MLLM", "Element", "Paare", "Calls", "Matches", "Fehler",
-                    "Match-Rate (%)", "Ø Latenz (ms)", "Ø Tokens", "Tokens gesamt", "Tokens/Sek"]
+    display_cols = ["Run", "MLLM", "Element", "Paare", "Calls", "Korrekt", "Bewertet", "Fehler",
+                    "Accuracy (%)", "Ø Latenz (ms)", "Ø Tokens", "Tokens gesamt", "Tokens/Sek"]
     st.dataframe(df[display_cols], use_container_width=True)
 
     st.divider()
@@ -853,7 +855,7 @@ def render_monitoring_tab():
 
     chart_metric = st.selectbox(
         "Metrik für Balkendiagramm",
-        options=["Match-Rate (%)", "Ø Latenz (ms)", "Ø Tokens", "Tokens gesamt", "Tokens/Sek"],
+        options=["Accuracy (%)", "Ø Latenz (ms)", "Ø Tokens", "Tokens gesamt", "Tokens/Sek"],
         index=0,
     )
 
@@ -869,7 +871,7 @@ def render_monitoring_tab():
 
     col1, col2 = st.columns(2)
     metrics = [
-        ("Match-Rate (%)", col1),
+        ("Accuracy (%)", col1),
         ("Ø Latenz (ms)", col2),
         ("Ø Tokens", col1),
         ("Tokens gesamt", col2),
