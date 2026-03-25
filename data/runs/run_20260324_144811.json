@@ -1,0 +1,84 @@
+{
+  "run_id": "run_20260324_144811",
+  "name": "Startseite-Reiter · 2 MLLMs · 1 Paare",
+  "timestamp": "2026-03-24T14:48:11.144606",
+  "element": "Startseite-Reiter",
+  "mllms": [
+    "Anthropic (claude-sonnet-4-6)",
+    "qwen3-vl:32b (Remote)"
+  ],
+  "pair_count": 1,
+  "total_calls": 2,
+  "summary": {
+    "total": 2,
+    "matches": 2,
+    "mismatches": 0,
+    "errors": 0,
+    "by_mllm": {
+      "claude-sonnet-4-6": {
+        "total": 1,
+        "matches": 1,
+        "mismatches": 0,
+        "errors": 0,
+        "correct": 1,
+        "incorrect": 0,
+        "evaluated": 1,
+        "avg_latency_ms": 8617.2,
+        "avg_tokens": 3620.0,
+        "total_tokens": 3620,
+        "avg_tokens_per_sec": 420.1,
+        "accuracy": 1.0
+      },
+      "qwen3-vl:32b (Remote)": {
+        "total": 1,
+        "matches": 1,
+        "mismatches": 0,
+        "errors": 0,
+        "correct": 1,
+        "incorrect": 0,
+        "evaluated": 1,
+        "avg_latency_ms": 39905.8,
+        "avg_tokens": 3047.0,
+        "total_tokens": 3047,
+        "avg_tokens_per_sec": 76.4,
+        "accuracy": 1.0
+      }
+    }
+  },
+  "results": [
+    {
+      "pair_id": "paar_004",
+      "mllm": "claude-sonnet-4-6",
+      "element": "Startseite-Reiter",
+      "description_a": "Screenshot A zeigt die Spiegel Netzwelt-Webseite mit einem überlagerten Cookie-/Tracking-Einwilligungsdialog (\"Herzlich willkommen!\"), der die Navigation im Hintergrund teilweise verdeckt. In der Navigationsleiste ist der Reiter \"Startseite\" erkennbar.",
+      "description_b": "Screenshot B zeigt dieselbe Spiegel Netzwelt-Webseite, nun mit einem Abonnement-Angebot-Dialog (\"Jetzt alle Artikel freischalten: 4 Wochen für 1 €\") im Vordergrund. Die Navigationsleiste ist sichtbar und enthält die Reiter \"Menü\", \"Startseite\", \"Themen-Übersicht\" und \"Facebook\".",
+      "presence_a": true,
+      "presence_b": true,
+      "match": true,
+      "reasoning": "In Screenshot A ist in der Navigationsleiste hinter dem Einwilligungsdialog der Text \"Startseite\" als Navigationselement erkennbar, auch wenn er teilweise durch das Modal verdeckt wird. In Screenshot B ist der \"Startseite\"-Reiter in der Navigationsleiste klar und deutlich sichtbar, direkt neben \"Menü\" und vor \"Themen-Übersicht\".",
+      "tokens_used": 3620,
+      "latency_ms": 8617.155075073242,
+      "raw_response": "[{'id': 'toolu_015YTpKBLKjShPad1FzpupZp', 'caller': {'type': 'direct'}, 'input': {'description_a': 'Screenshot A zeigt die Spiegel Netzwelt-Webseite mit einem überlagerten Cookie-/Tracking-Einwilligungsdialog (\"Herzlich willkommen!\"), der die Navigation im Hintergrund teilweise verdeckt. In der Navigationsleiste ist der Reiter \"Startseite\" erkennbar.', 'description_b': 'Screenshot B zeigt dieselbe Spiegel Netzwelt-Webseite, nun mit einem Abonnement-Angebot-Dialog (\"Jetzt alle Artikel freischalten: 4 Wochen für 1 €\") im Vordergrund. Die Navigationsleiste ist sichtbar und enthält die Reiter \"Menü\", \"Startseite\", \"Themen-Übersicht\" und \"Facebook\".', 'presence_a': True, 'presence_b': True, 'reasoning': 'In Screenshot A ist in der Navigationsleiste hinter dem Einwilligungsdialog der Text \"Startseite\" als Navigationselement erkennbar, auch wenn er teilweise durch das Modal verdeckt wird. In Screenshot B ist der \"Startseite\"-Reiter in der Navigationsleiste klar und deutlich sichtbar, direkt neben \"Menü\" und vor \"Themen-Übersicht\".'}, 'name': 'PresenceCheckResult', 'type': 'tool_use'}]",
+      "timestamp": "2026-03-24T14:47:31.234964",
+      "error": null,
+      "ground_truth": "both"
+    },
+    {
+      "pair_id": "paar_004",
+      "mllm": "qwen3-vl:32b (Remote)",
+      "element": "Startseite-Reiter",
+      "description_a": "Screenshot A zeigt eine Webseite mit einem Cookie-Consent-Popup, das Werbung und Tracking-Optionen anbietet. Im Hintergrund ist die Navigationsleiste mit dem 'Startseite'-Reiter sichtbar.",
+      "description_b": "Screenshot B zeigt eine Webseite mit einem Abo-Popup, der Artikel freischaltet. Die Navigationsleiste enthält den 'Startseite'-Reiter als Teil des Breadcrumbs.",
+      "presence_a": true,
+      "presence_b": true,
+      "match": true,
+      "reasoning": "In Screenshot A ist der 'Startseite'-Reiter in der Navigationsleiste hinter dem Popup sichtbar. In Screenshot B ist er als Teil des Breadcrumb-Pfads (Startseite > Themen-Übersicht > Facebook) deutlich erkennbar. Beide Szenarien bestätigen die Anwesenheit des Elements.",
+      "tokens_used": 3047,
+      "latency_ms": 39905.79581260681,
+      "raw_response": "\n{\"description_a\": \"Screenshot A zeigt eine Webseite mit einem Cookie-Consent-Popup, das Werbung und Tracking-Optionen anbietet. Im Hintergrund ist die Navigationsleiste mit dem 'Startseite'-Reiter sichtbar.\", \"description_b\": \"Screenshot B zeigt eine Webseite mit einem Abo-Popup, der Artikel freischaltet. Die Navigationsleiste enthält den 'Startseite'-Reiter als Teil des Breadcrumbs.\", \"presence_a\": true, \"presence_b\": true, \"reasoning\": \"In Screenshot A ist der 'Startseite'-Reiter in der Navigationsleiste hinter dem Popup sichtbar. In Screenshot B ist er als Teil des Breadcrumb-Pfads (Startseite > Themen-Übersicht > Facebook) deutlich erkennbar. Beide Szenarien bestätigen die Anwesenheit des Elements.\"}",
+      "timestamp": "2026-03-24T14:48:11.144100",
+      "error": null,
+      "ground_truth": "both"
+    }
+  ]
+}
