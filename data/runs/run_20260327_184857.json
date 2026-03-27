@@ -1,0 +1,69 @@
+{
+  "run_id": "run_20260327_184857",
+  "name": "FAQ, Such-Leiste · 1 MLLM · 2 Paare",
+  "timestamp": "2026-03-27T18:48:57.332673",
+  "element": "FAQ, Such-Leiste",
+  "mllms": [
+    "Google (gemini-3.1-pro-preview)"
+  ],
+  "pair_count": 2,
+  "total_calls": 2,
+  "summary": {
+    "total": 2,
+    "matches": 0,
+    "mismatches": 2,
+    "errors": 0,
+    "by_mllm": {
+      "gemini-3.1-pro-preview": {
+        "total": 2,
+        "matches": 0,
+        "mismatches": 2,
+        "errors": 0,
+        "correct": 0,
+        "incorrect": 2,
+        "evaluated": 2,
+        "avg_latency_ms": 4492.4,
+        "avg_tokens": 2556.5,
+        "total_tokens": 5113,
+        "avg_tokens_per_sec": 569.0,
+        "accuracy": 0.0
+      }
+    }
+  },
+  "results": [
+    {
+      "pair_id": "paar_012",
+      "mllm": "gemini-3.1-pro-preview",
+      "element": "FAQ",
+      "description_a": "Screenshot A zeigt eine Webseite im Light Mode mit den Abschnitten 'Kundenstimmen' und 'Häufige Fragen' (FAQ).",
+      "description_b": "Screenshot B zeigt eine Webseite im Dark Mode mit den Abschnitten 'Kaufhilfe, Service & Mitgliedschaft', 'Services im Überblick' und 'Kundenstimmen'.",
+      "presence_a": true,
+      "presence_b": false,
+      "match": false,
+      "reasoning": "In Screenshot A ist der Abschnitt 'Häufige Fragen' mit dem Label 'FAQ' deutlich sichtbar. In Screenshot B fehlt dieser Abschnitt komplett; stattdessen sind andere Inhalte wie 'Kaufhilfe' und 'Services' zu sehen.",
+      "tokens_used": 2502,
+      "latency_ms": 4447.8418827056885,
+      "raw_response": "[{'type': 'text', 'text': '{\\n  \"description_a\": \"Screenshot A zeigt eine Webseite im Light Mode mit den Abschnitten \\'Kundenstimmen\\' und \\'Häufige Fragen\\' (FAQ).\",\\n  \"description_b\": \"Screenshot B zeigt eine Webseite im Dark Mode mit den Abschnitten \\'Kaufhilfe, Service & Mitgliedschaft\\', \\'Services im Überblick\\' und \\'Kundenstimmen\\'.\",\\n  \"presence_a\": true,\\n  \"presence_b\": false,\\n  \"reasoning\": \"In Screenshot A ist der Abschnitt \\'Häufige Fragen\\' mit dem Label \\'FAQ\\' deutlich sichtbar. In Screenshot B fehlt dieser Abschnitt komplett; stattdessen sind andere Inhalte wie \\'Kaufhilfe\\' und \\'Services\\' zu sehen.\"\\n}', 'extras': {'signature': 'EjQKMgG+Pvb7pb3apTEDI7bOH6bXMfxVlBqJ/vvNOkSjdN7rvi+nmGm/WVsPTu8iX8WfDWdI'}}]",
+      "timestamp": "2026-03-27T18:48:52.793162",
+      "error": null,
+      "ground_truth": "both"
+    },
+    {
+      "pair_id": "paar_019",
+      "mllm": "gemini-3.1-pro-preview",
+      "element": "Such-Leiste",
+      "description_a": "Screenshot A zeigt die Startseite eines Online-Shops (Temu) mit einer breiten Ansicht. Oben befindet sich eine rosa Navigationsleiste mit einer Suchleiste in der Mitte, darunter Produktempfehlungen unter der Überschrift 'Top-Auswahl'.",
+      "description_b": "Screenshot B zeigt ebenfalls die Startseite desselben Online-Shops, jedoch in einer schmaleren Ansicht. Ein Pop-up-Fenster zur Anmeldung überdeckt teilweise die Produktempfehlungen, und die Navigationsleiste oben ist kompakter gestaltet.",
+      "presence_a": true,
+      "presence_b": false,
+      "match": false,
+      "reasoning": "In Screenshot A ist die Suchleiste deutlich in der Mitte der rosa Navigationsleiste sichtbar (weißes Feld mit Lupe). In Screenshot B fehlt dieses Suchfeld in der Navigationsleiste komplett, vermutlich aufgrund des responsiven Designs für schmalere Bildschirme.",
+      "tokens_used": 2611,
+      "latency_ms": 4537.056922912598,
+      "raw_response": "[{'type': 'text', 'text': '{\\n  \"description_a\": \"Screenshot A zeigt die Startseite eines Online-Shops (Temu) mit einer breiten Ansicht. Oben befindet sich eine rosa Navigationsleiste mit einer Suchleiste in der Mitte, darunter Produktempfehlungen unter der Überschrift \\'Top-Auswahl\\'.\",\\n  \"description_b\": \"Screenshot B zeigt ebenfalls die Startseite desselben Online-Shops, jedoch in einer schmaleren Ansicht. Ein Pop-up-Fenster zur Anmeldung überdeckt teilweise die Produktempfehlungen, und die Navigationsleiste oben ist kompakter gestaltet.\",\\n  \"presence_a\": true,\\n  \"presence_b\": false,\\n  \"reasoning\": \"In Screenshot A ist die Suchleiste deutlich in der Mitte der rosa Navigationsleiste sichtbar (weißes Feld mit Lupe). In Screenshot B fehlt dieses Suchfeld in der Navigationsleiste komplett, vermutlich aufgrund des responsiven Designs für schmalere Bildschirme.\"\\n}', 'extras': {'signature': 'EjQKMgG+Pvb7fY1+hex9DLeD9wOhh+Y40ftP4IJ0hfO94KME60Rpp4t+JkMnUMvE3xyH2Zo6'}}]",
+      "timestamp": "2026-03-27T18:48:57.331866",
+      "error": null,
+      "ground_truth": "both"
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "run_id": "run_20260327_185037",
+  "name": "FAQ, Such-Leiste · 2 MLLMs · 2 Paare",
+  "timestamp": "2026-03-27T18:50:37.800786",
+  "element": "FAQ, Such-Leiste",
+  "mllms": [
+    "Anthropic (claude-sonnet-4-6)",
+    "LLaVA (Lokal)"
+  ],
+  "pair_count": 2,
+  "total_calls": 4,
+  "summary": {
+    "total": 4,
+    "matches": 1,
+    "mismatches": 3,
+    "errors": 0,
+    "by_mllm": {
+      "claude-sonnet-4-6": {
+        "total": 2,
+        "matches": 1,
+        "mismatches": 1,
+        "errors": 0,
+        "correct": 1,
+        "incorrect": 1,
+        "evaluated": 2,
+        "avg_latency_ms": 9579.3,
+        "avg_tokens": 4286.5,
+        "total_tokens": 8573,
+        "avg_tokens_per_sec": 448.0,
+        "accuracy": 0.5
+      },
+      "LLaVA (Lokal)": {
+        "total": 2,
+        "matches": 0,
+        "mismatches": 2,
+        "errors": 0,
+        "correct": 0,
+        "incorrect": 2,
+        "evaluated": 2,
+        "avg_latency_ms": 17438.7,
+        "avg_tokens": 1741.5,
+        "total_tokens": 3483,
+        "avg_tokens_per_sec": 104.8,
+        "accuracy": 0.0
+      }
+    }
+  },
+  "results": [
+    {
+      "pair_id": "paar_012",
+      "mllm": "claude-sonnet-4-6",
+      "element": "FAQ",
+      "description_a": "Screenshot A zeigt die Aurora Market Website im Light Mode mit einer Navigationsleiste (Produkte, Services, FAQ, Dark Mode aktivieren), einem Kundenstimmen-Abschnitt mit drei Bewertungskarten sowie einem FAQ-Bereich mit der Überschrift „Häufige Fragen\" und zwei Fragekarten.",
+      "description_b": "Screenshot B zeigt die Aurora Market Website im Dark Mode mit einer Navigationsleiste (Light Mode aktivieren, FAQ, Services, Produkte), einem Beratungs-Abschnitt mit Service-Informationen und einer Vergleichstabelle sowie dem Beginn des Kundenstimmen-Abschnitts.",
+      "presence_a": true,
+      "presence_b": true,
+      "match": true,
+      "reasoning": "In Screenshot A ist „FAQ\" gleich zweifach vorhanden: einmal als Navigationspunkt in der oberen Menüleiste und einmal als Abschnittsbezeichnung (Label) über der Überschrift „Häufige Fragen\". In Screenshot B ist „FAQ\" ebenfalls deutlich sichtbar als Navigationspunkt in der oberen Menüleiste im Dark Mode.",
+      "tokens_used": 4471,
+      "latency_ms": 9408.967018127441,
+      "raw_response": "[{'id': 'toolu_01P6rDozbXPwuuQAAgnYSy6C', 'caller': {'type': 'direct'}, 'input': {'description_a': 'Screenshot A zeigt die Aurora Market Website im Light Mode mit einer Navigationsleiste (Produkte, Services, FAQ, Dark Mode aktivieren), einem Kundenstimmen-Abschnitt mit drei Bewertungskarten sowie einem FAQ-Bereich mit der Überschrift „Häufige Fragen\" und zwei Fragekarten.', 'description_b': 'Screenshot B zeigt die Aurora Market Website im Dark Mode mit einer Navigationsleiste (Light Mode aktivieren, FAQ, Services, Produkte), einem Beratungs-Abschnitt mit Service-Informationen und einer Vergleichstabelle sowie dem Beginn des Kundenstimmen-Abschnitts.', 'presence_a': True, 'presence_b': True, 'reasoning': 'In Screenshot A ist „FAQ\" gleich zweifach vorhanden: einmal als Navigationspunkt in der oberen Menüleiste und einmal als Abschnittsbezeichnung (Label) über der Überschrift „Häufige Fragen\". In Screenshot B ist „FAQ\" ebenfalls deutlich sichtbar als Navigationspunkt in der oberen Menüleiste im Dark Mode.'}, 'name': 'PresenceCheckResult', 'type': 'tool_use'}]",
+      "timestamp": "2026-03-27T18:49:53.158780",
+      "error": null,
+      "ground_truth": "both"
+    },
+    {
+      "pair_id": "paar_012",
+      "mllm": "LLaVA (Lokal)",
+      "element": "FAQ",
+      "description_a": "Screenshot A zeigt eine dynamische Webseite mit einer Übersicht über die Kategorien und Unterkategorien eines FAQ-Abschnitts, die in Deutsch als 'Kundendienstleistungen' überschrieben sind. Es gibt eine Liste von Fragen und Antworten zu verschiedenen Themen wie z.B. 'Kauf', 'Lieferung', 'Service', 'Gutscheine', 'Wiedergut', 'Rückgabe', 'Sicherheit', 'Datenschutz' und 'Kontakt'. Es gibt auch eine Option zum Anzeigen von weiteren Kategorien.",
+      "description_b": "Screenshot B zeigt die gleiche dynamische Webseite wie Screenshot A, aber es fehlt der Abschnitt mit den Fragen und Antworten. Stattdessen gibt es eine Meldung in Deutsch, die sich auf die Fehlende Kategorien bezieht.",
+      "presence_a": true,
+      "presence_b": false,
+      "match": false,
+      "reasoning": "In Screenshot A ist der Abschnitt mit den Fragen und Antworten vorhanden. In Screenshot B fehlt dieser Abschnitt, dafür gibt es eine Meldung in Deutsch, die sich auf die Fehlende Kategorien bezieht.",
+      "tokens_used": 1786,
+      "latency_ms": 21426.704168319702,
+      "raw_response": "{\n  \"description_a\": \"Screenshot A zeigt eine dynamische Webseite mit einer Übersicht über die Kategorien und Unterkategorien eines FAQ-Abschnitts, die in Deutsch als 'Kundendienstleistungen' überschrieben sind. Es gibt eine Liste von Fragen und Antworten zu verschiedenen Themen wie z.B. 'Kauf', 'Lieferung', 'Service', 'Gutscheine', 'Wiedergut', 'Rückgabe', 'Sicherheit', 'Datenschutz' und 'Kontakt'. Es gibt auch eine Option zum Anzeigen von weiteren Kategorien.\",\n  \"description_b\": \"Screenshot B zeigt die gleiche dynamische Webseite wie Screenshot A, aber es fehlt der Abschnitt mit den Fragen und Antworten. Stattdessen gibt es eine Meldung in Deutsch, die sich auf die Fehlende Kategorien bezieht.\",\n  \"presence_a\": true,\n  \"presence_b\": false,\n  \"reasoning\": \"In Screenshot A ist der Abschnitt mit den Fragen und Antworten vorhanden. In Screenshot B fehlt dieser Abschnitt, dafür gibt es eine Meldung in Deutsch, die sich auf die Fehlende Kategorien bezieht.\"\n} ",
+      "timestamp": "2026-03-27T18:50:14.588898",
+      "error": null,
+      "ground_truth": "both"
+    },
+    {
+      "pair_id": "paar_019",
+      "mllm": "claude-sonnet-4-6",
+      "element": "Such-Leiste",
+      "description_a": "Screenshot A zeigt die Startseite des Online-Shops Temu mit einer vollständigen Desktop-Ansicht, inklusive Navigationsleiste, einer prominent platzierten Suchleiste mit dem Platzhaltertext „Temu durchsuchen\" sowie einer Produktübersicht unter „Top-Auswahl\".",
+      "description_b": "Screenshot B zeigt ebenfalls die Temu-Startseite, jedoch in einer schmaleren (mobilen) Ansicht, bei der ein Login-Modal („Melde dich für ein optimales Erlebnis an\") im Vordergrund erscheint; in der oberen Navigationsleiste ist lediglich ein Lupensymbol sichtbar, aber kein ausgeklapptes Suchfeld.",
+      "presence_a": true,
+      "presence_b": false,
+      "match": false,
+      "reasoning": "In Screenshot A ist eine klar sichtbare, vollständig aufgeklappte Suchleiste mit dem Text „Temu durchsuchen\" und einem Lupensymbol in der Navigationsleiste vorhanden – ein klassisches Such-Eingabefeld. In Screenshot B hingegen ist die Suchleiste nicht als Eingabefeld sichtbar; stattdessen ist nur ein Lupensymbol (Icon) in der kompakten mobilen Navigation zu sehen, was lediglich auf eine versteckte/kollabierte Suchfunktion hinweist, aber keine vollständige Such-Leiste darstellt.",
+      "tokens_used": 4102,
+      "latency_ms": 9749.687194824219,
+      "raw_response": "[{'id': 'toolu_016Wbh5uE4JTQ2bAgm8XtusG', 'caller': {'type': 'direct'}, 'input': {'description_a': 'Screenshot A zeigt die Startseite des Online-Shops Temu mit einer vollständigen Desktop-Ansicht, inklusive Navigationsleiste, einer prominent platzierten Suchleiste mit dem Platzhaltertext „Temu durchsuchen\" sowie einer Produktübersicht unter „Top-Auswahl\".', 'description_b': 'Screenshot B zeigt ebenfalls die Temu-Startseite, jedoch in einer schmaleren (mobilen) Ansicht, bei der ein Login-Modal („Melde dich für ein optimales Erlebnis an\") im Vordergrund erscheint; in der oberen Navigationsleiste ist lediglich ein Lupensymbol sichtbar, aber kein ausgeklapptes Suchfeld.', 'presence_a': True, 'presence_b': False, 'reasoning': 'In Screenshot A ist eine klar sichtbare, vollständig aufgeklappte Suchleiste mit dem Text „Temu durchsuchen\" und einem Lupensymbol in der Navigationsleiste vorhanden – ein klassisches Such-Eingabefeld. In Screenshot B hingegen ist die Suchleiste nicht als Eingabefeld sichtbar; stattdessen ist nur ein Lupensymbol (Icon) in der kompakten mobilen Navigation zu sehen, was lediglich auf eine versteckte/kollabierte Suchfunktion hinweist, aber keine vollständige Such-Leiste darstellt.'}, 'name': 'PresenceCheckResult', 'type': 'tool_use'}]",
+      "timestamp": "2026-03-27T18:50:24.343182",
+      "error": null,
+      "ground_truth": "both"
+    },
+    {
+      "pair_id": "paar_019",
+      "mllm": "LLaVA (Lokal)",
+      "element": "Such-Leiste",
+      "description_a": "Screenshot A zeigt eine dynamische Webseite mit einem Suchleiste, die in der Mitte des Bildes angezeigt wird.",
+      "description_b": "Screenshot B zeigt eine dynamische Webseite ohne einen Suchleiste. Stattdessen ist ein Eingabe-Feld für den Eintritt von Suchanfragen vorhanden, aber es fehlt der Suchleiste.",
+      "presence_a": true,
+      "presence_b": false,
+      "match": false,
+      "reasoning": "In Screenshot A ist eine Suchleiste vorhanden, da sie im Bild sichtbar ist und sicherlich Teil des Designs der Webseite ist. In Screenshot B fehlt die Suchleiste, da es kein Eingabe-Feld für den Eintritt von Suchanfragen gibt und keine visuelle Anzeige einer Suchleiste existiert.",
+      "tokens_used": 1697,
+      "latency_ms": 13450.769901275635,
+      "raw_response": "{\n  \"description_a\": \"Screenshot A zeigt eine dynamische Webseite mit einem Suchleiste, die in der Mitte des Bildes angezeigt wird.\",\n  \"description_b\": \"Screenshot B zeigt eine dynamische Webseite ohne einen Suchleiste. Stattdessen ist ein Eingabe-Feld für den Eintritt von Suchanfragen vorhanden, aber es fehlt der Suchleiste.\",\n  \"presence_a\": true,\n  \"presence_b\": false,\n  \"reasoning\": \"In Screenshot A ist eine Suchleiste vorhanden, da sie im Bild sichtbar ist und sicherlich Teil des Designs der Webseite ist. In Screenshot B fehlt die Suchleiste, da es kein Eingabe-Feld für den Eintritt von Suchanfragen gibt und keine visuelle Anzeige einer Suchleiste existiert.\"\n} ",
+      "timestamp": "2026-03-27T18:50:37.798135",
+      "error": null,
+      "ground_truth": "both"
+    }
+  ]
+}
