@@ -74,10 +74,79 @@ class ResultManager:
         columns = self.export_config.get_columns()
         data = [r.to_dict(columns) for r in self.results]
         return pd.DataFrame(data, columns=columns)
-    
+
+    def to_export_dataframe(self) -> pd.DataFrame:
+        """Results DataFrame enriched with per-MLLM aggregated metrics as extra columns.
+
+        Always includes tokens_used and latency_ms for aggregate computation,
+        regardless of ExportConfig, so the summary columns are always populated.
+        """
+        df = self.to_dataframe()
+
+        # Ensure latency_ms and tokens_used are present (needed for aggregates)
+        base_cols = self.export_config.get_columns()
+        extra_cols = []
+        if "latency_ms" not in base_cols:
+            extra_cols.append("latency_ms")
+        if "tokens_used" not in base_cols:
+            extra_cols.append("tokens_used")
+
+        if extra_cols:
+            extra_data = [r.to_dict(extra_cols) for r in self.results]
+            for col in extra_cols:
+                df[col] = [row[col] for row in extra_data]
+
+        # Compute per-MLLM aggregated stats from raw results
+        agg: dict = {}
+        for result in self.results:
+            entry = agg.setdefault(result.mllm, {
+                "latencies": [], "tokens": [], "tok_per_sec": [],
+                "correct": 0, "evaluated": 0,
+            })
+            if not result.error:
+                if result.latency_ms is not None:
+                    entry["latencies"].append(result.latency_ms)
+                if result.tokens_used is not None:
+                    entry["tokens"].append(result.tokens_used)
+                if result.latency_ms and result.tokens_used:
+                    entry["tok_per_sec"].append(
+                        result.tokens_used / (result.latency_ms / 1000)
+                    )
+            c = result.correct
+            if c is not None:
+                entry["evaluated"] += 1
+                if c:
+                    entry["correct"] += 1
+
+        summary_rows = {}
+        for mllm, entry in agg.items():
+            lats = entry["latencies"]
+            toks = entry["tokens"]
+            tps = entry["tok_per_sec"]
+            ev = entry["evaluated"]
+            summary_rows[mllm] = {
+                "mllm_avg_latency_ms": round(sum(lats) / len(lats), 1) if lats else None,
+                "mllm_avg_tokens": round(sum(toks) / len(toks), 1) if toks else None,
+                "mllm_tokens_per_sec": round(sum(tps) / len(tps), 1) if tps else None,
+                "mllm_accuracy": round(entry["correct"] / ev, 4) if ev > 0 else None,
+                "mllm_correct_count": entry["correct"] if ev > 0 else None,
+                "mllm_evaluated_count": ev if ev > 0 else None,
+            }
+
+        summary_df = pd.DataFrame.from_dict(summary_rows, orient="index")
+        summary_df.index.name = "mllm"
+        summary_df = summary_df.reset_index()
+
+        enriched = df.merge(summary_df, on="mllm", how="left")
+
+        # Drop the extra columns we temporarily added if they weren't in export config
+        enriched = enriched.drop(columns=[c for c in extra_cols if c in enriched.columns])
+
+        return enriched
+
     def export_csv(self, filepath: Path) -> Path:
         """Export results to CSV file."""
-        df = self.to_dataframe()
+        df = self.to_export_dataframe()
         filepath = Path(filepath)
         filepath.parent.mkdir(parents=True, exist_ok=True)
         df.to_csv(filepath, index=False, encoding="utf-8")

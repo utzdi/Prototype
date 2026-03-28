@@ -773,7 +773,12 @@ def render_results_tab():
         st.write("")
         st.write("")
         if st.button("CSV herunterladen", type="primary"):
-            csv_data = filtered_df.to_csv(index=False)
+            export_df = st.session_state.result_manager.to_export_dataframe()
+            if not filtered_df.empty and "mllm" in filtered_df.columns:
+                export_df = export_df[export_df["mllm"].isin(filtered_df["mllm"].unique())]
+                if "pair_id" in filtered_df.columns:
+                    export_df = export_df[export_df["pair_id"].isin(filtered_df["pair_id"].unique())]
+            csv_data = export_df.to_csv(index=False)
             st.download_button(
                 label="Download",
                 data=csv_data,
