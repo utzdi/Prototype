@@ -26,6 +26,56 @@ Wichtig:
 - reasoning soll sich sowohl auf Screenshot A als auch Screenshot B beziehen."""
 
 
+STRUCTURED_TEMPLATE = """<prompt>
+  <role>
+    Du bist ein Experte für visuelle Qualitätssicherung (QA) und spezialisiert auf den Vergleich von Benutzeroberflächen (UI) in dynamischen Webanwendungen.
+  </role>
+
+  <context>
+    Dir werden zwei Screenshots einer dynamischen Webseite zur Analyse vorgelegt:
+    - Screenshot A dient als Referenzbild (Soll-Zustand oder Vergleichsbasis).
+    - Screenshot B dient als Vergleichsbild (aktueller Zustand).
+    Die Analyse findet im Rahmen eines automatisierten UI-Tests statt, bei dem die Konsistenz spezifischer Elemente geprüft wird.
+  </context>
+
+  <directive>
+    Führe eine detaillierte visuelle Prüfung für das Element "{element}" durch.
+    1. Analysiere beide Screenshots individuell.
+    2. Stelle fest, ob das gesuchte Element in jedem der Bilder sichtbar und identifizierbar ist.
+    3. Erstelle eine objektive Begründung für deine Entscheidung, die beide Bilder berücksichtigt.
+  </directive>
+
+  <style>
+    - Antworte ausschließlich im JSON-Format.
+    - Vermeide jegliche Einleitungstexte, Markdown-Code-Fences (wie ```json) oder abschließende Kommentare.
+    - Die Sprache innerhalb der JSON-Werte muss Deutsch sein.
+    - Halte die Beschreibungen prägnant und technisch sachlich.
+  </style>
+
+  <example>
+    Input-Element: "Warenkorb-Button"
+    Output:
+    {
+      "description_a": "Die Startseite mit blauem Header und einem deutlich sichtbaren Einkaufswagen-Icon oben rechts.",
+      "description_b": "Die Startseite im mobilen Viewport; der Header ist komprimiert, das Icon fehlt.",
+      "presence_a": true,
+      "presence_b": false,
+      "reasoning": "In Screenshot A ist das Icon mit der Beschriftung 'Warenkorb' klar im Header erkennbar. In Screenshot B wurde das Element vermutlich aufgrund des responsiven Designs in ein Burger-Menü verschoben und ist nicht direkt sichtbar."
+    }
+  </example>
+
+  <output_format>
+    {
+      "description_a": "Kurze Beschreibung von Screenshot A (1-2 Sätze).",
+      "description_b": "Kurze Beschreibung von Screenshot B (1-2 Sätze).",
+      "presence_a": boolean,
+      "presence_b": boolean,
+      "reasoning": "Zusammenfassende Begründung für beide Ergebnisse."
+    }
+  </output_format>
+</prompt>"""
+
+
 @dataclass
 class PromptTemplate:
     name: str
@@ -40,6 +90,11 @@ class PromptBuilder:
                 name="default",
                 template=DEFAULT_TEMPLATE,
                 description="Standard-Template für Element-Präsenz-Check"
+            ),
+            "structured": PromptTemplate(
+                name="structured",
+                template=STRUCTURED_TEMPLATE,
+                description="XML-strukturiertes Template mit Rolle, Kontext und Beispiel"
             )
         }
         self.current_template = "default"

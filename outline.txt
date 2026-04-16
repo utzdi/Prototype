@@ -1,0 +1,50 @@
+Kapitel 5: Implementierung
+5.1 Entwicklungsumgebung und Technologie-Stack
+Hier begründest du deine Werkzeugwahl für den Bau des Prototypen:
+
+Programmiersprache: Python (aufgrund der Bibliotheken für Datenanalyse und KI).
+
+Frameworks: LangChain als zentrale Abstraktionsschicht (FA-06), um Modelle wie GPT-4o und lokale Instanzen über eine einheitliche Schnittstelle anzusprechen.
++1
+
+Infrastruktur: Ollama zur Ausführung der lokalen MLLMs und offizielle SDKs für die Cloud-Anbindungen.
+
+5.2 Realisierung der Orchestrierungslogik
+Beschreibe die softwareseitige Umsetzung deines Orchestrators:
+
+Datenmanagement: Wie liest dein Code die Screenshot-Paare und Metadaten aus dem FileSystem ein?
+
+Mapping zur Ground Truth: Erkläre, wie du jedem Testfall in deinem Datensatz die korrekte Antwort (Soll-Zustand) zuordnest, um später Vergleiche anstellen zu können.
+
+5.3 Multimodales Prompting und Bildverarbeitung
+Hier gehst du auf die technische Umsetzung von FA-03 (Vision-only) und FA-04 (Einheitliche Prompt-Struktur)  ein:
++3
+
+Bild-Encoding: Da APIs Bilder als Datenströme erwarten, beschreibst du hier die Konvertierung der Screenshots in Base64-Strings.
+
+Prompt-Templates: Zeige, wie du LangChain nutzt, um dynamische Prompts zu erstellen, die das Ziel-Element und die Bilder kombinieren.
+
+5.4 Standardisierung des Outputs (JSON-Parsing)
+Dies ist die technische Lösung für FA-05:
++1
+
+Schema-Definition: Welches JSON-Format erzwingst du? (z. B. Felder für is_present und reasoning).
+
+Output-Parser: Wie gehst du vor, wenn ein Modell kein valides JSON liefert? Erkläre hier kurz deine Logik zur Validierung der Antworten.
+
+5.5 Automatisierung der Batch-Läufe
+Hier beschreibst du die Umsetzung der automatisierten Batch-Verarbeitung (FA-07):
+
+Laufzeit-Steuerung: Wie führt das Skript die 80 Paare in 3 Durchläufen (Runs) nacheinander aus?
+
+Fehlerbehandlung: Wie verhinderst du, dass der gesamte Prozess bei einem API-Timeout abbricht?
+
+Monitoring: Wie implementierst du die Messung von Zeit und Kosten pro Request (NFA-01)?
++2
+
+5.6 Technische Herausforderungen (Optional, aber empfohlen)
+Ein kurzer Abschnitt über Probleme, die erst beim Coden auftraten:
+
+Unterschiedliche JSON-Qualität zwischen Cloud-Modellen und lokalen Modellen.
+
+Umgang mit Rate-Limits der APIs.

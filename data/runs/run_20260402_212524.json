@@ -1,0 +1,52 @@
+{
+  "run_id": "run_20260402_212524",
+  "name": "Einkaufswagen-Icon · 1 MLLM · 1 Paare",
+  "timestamp": "2026-04-02T21:25:24.540362",
+  "element": "Einkaufswagen-Icon",
+  "mllms": [
+    "Anthropic (claude-sonnet-4-6)"
+  ],
+  "pair_count": 1,
+  "total_calls": 1,
+  "summary": {
+    "total": 1,
+    "matches": 0,
+    "mismatches": 0,
+    "errors": 1,
+    "by_mllm": {
+      "claude-sonnet-4-6": {
+        "total": 1,
+        "matches": 0,
+        "mismatches": 0,
+        "errors": 1,
+        "correct": 0,
+        "incorrect": 0,
+        "evaluated": 0,
+        "avg_latency_ms": null,
+        "avg_tokens": null,
+        "total_tokens": null,
+        "avg_tokens_per_sec": null,
+        "accuracy": null
+      }
+    }
+  },
+  "results": [
+    {
+      "pair_id": "paar_007",
+      "mllm": "claude-sonnet-4-6",
+      "element": "Einkaufswagen-Icon",
+      "description_a": null,
+      "description_b": null,
+      "presence_a": null,
+      "presence_b": null,
+      "match": null,
+      "reasoning": null,
+      "tokens_used": null,
+      "latency_ms": 3186.462879180908,
+      "raw_response": null,
+      "timestamp": "2026-04-02T21:25:24.538365",
+      "error": "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'messages.0.content.1.image.source.base64: image exceeds 5 MB maximum: 11236676 bytes > 5242880 bytes'}, 'request_id': 'req_011CZfVXoaUfSaz4A6VDTDv1'}",
+      "ground_truth": "neither"
+    }
+  ]
+}
